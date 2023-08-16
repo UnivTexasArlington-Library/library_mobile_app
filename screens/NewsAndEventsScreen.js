@@ -10,12 +10,12 @@ import {
 import {fetchBlogData} from "../util/http";
 import RenderHTML from "react-native-render-html";
 
-function BlogScreen() {
+function NewsAndEventsScreen() {
   const {width} = useWindowDimensions();
   const [fetchedBlogPost, setFetchedBlogPost] = useState([]);
   function renderBlogItem(itemData) {
     const source = {
-      html: `${itemData.item.bodyText}`,
+      html: `${itemData.item.bodyHTML}`,
     };
     return (
       <View>
@@ -51,7 +51,7 @@ function BlogScreen() {
   );
 }
 
-export default BlogScreen;
+export default NewsAndEventsScreen;
 
 const styles = StyleSheet.create({
   image: {

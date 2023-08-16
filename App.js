@@ -7,7 +7,7 @@ import {
 } from "@react-navigation/drawer";
 import Home from "./screens/HomeScreen";
 import {GlobalStyles} from "./constants/styles";
-import BlogScreen from "./screens/BlogScreen";
+import BlogScreen from "./screens/NewsAndEventsScreen";
 import BackButton from "./components/BackButton";
 
 const Stack = createNativeStackNavigator();
@@ -31,10 +31,10 @@ function DrawerNavigation({navigation}) {
         }}
       />
       <Drawer.Screen
-        name="Blog"
+        name="NewsAndEvents"
         component={BlogScreen}
         options={{
-          title: "Blog",
+          title: "News and Events",
         }}
       />
     </Drawer.Navigator>
