@@ -6,14 +6,21 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 import {GlobalStyles} from "../constants/styles";
-import BlogScreen from "../screens/BlogScreen";
 
 function Options({navigation}) {
   function openDrawerHandler(selectionOption) {
-    navigation.navigate("Blog");
+    navigation.navigate("NewsAndEvents");
   }
   return (
     <View style={styles.gridContainer}>
+      <View style={styles.gridItem}>
+        <FontAwesome5
+          name="blog"
+          size={70}
+          color={GlobalStyles.colors.primary800}
+        />
+        <Text style={styles.itemText}>Blog</Text>
+      </View>
       <View style={styles.gridItem}>
         <Pressable
           android_ripple={{color: "#ccc"}}
@@ -23,21 +30,13 @@ function Options({navigation}) {
           ]}
           onPress={openDrawerHandler}
         >
-          <FontAwesome5
-            name="blog"
+          <MaterialIcons
+            name="event"
             size={70}
             color={GlobalStyles.colors.primary800}
           />
+          <Text style={styles.itemText}>News and Events</Text>
         </Pressable>
-        <Text style={styles.itemText}>Blog</Text>
-      </View>
-      <View style={styles.gridItem}>
-        <MaterialIcons
-          name="event"
-          size={70}
-          color={GlobalStyles.colors.primary800}
-        />
-        <Text style={styles.itemText}>News and Events</Text>
       </View>
       <View style={styles.gridItem}>
         <AntDesign
