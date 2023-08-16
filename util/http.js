@@ -10,7 +10,6 @@ export async function fetchBlogData() {
       },
     }
   );
-  console.log("hello");
   const blogData = response.data.data;
   const blogIncludedData = response.data.included;
   const blogPosts = [];
