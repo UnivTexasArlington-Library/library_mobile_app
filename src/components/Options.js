@@ -6,12 +6,14 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 import {GlobalStyles} from "../constants/styles";
-import React from "react";
+import React, {useEffect} from "react";
+import * as Notifications from "expo-notifications";
 
-const Options = ({navigation}) => {
+const Options = ({navigation, onScheduleNotificationHandler}) => {
   function openDrawerHandler(selectionOption) {
     navigation.navigate(selectionOption);
   }
+
   return (
     <View style={styles.gridContainer}>
       <View style={styles.gridItem}>
@@ -80,12 +82,22 @@ const Options = ({navigation}) => {
         </Text>
       </View>
       <View style={styles.gridItem}>
-        <Ionicons
-          name="notifications-outline"
-          size={70}
-          color={GlobalStyles.colors.primary800}
-          testID="notifications-icon"
-        />
+        <Pressable
+          android_ripple={{color: "#ccc"}}
+          style={({pressed}) => [
+            styles.button,
+            pressed ? styles.buttonPressed : null,
+          ]}
+          onPress={() => onScheduleNotificationHandler()}
+          testID="event-pressable"
+        >
+          <Ionicons
+            name="notifications-outline"
+            size={70}
+            color={GlobalStyles.colors.primary800}
+            testID="notifications-icon"
+          />
+        </Pressable>
         <Text style={styles.itemText} testID="notifications-text">
           Notifications
         </Text>

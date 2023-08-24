@@ -1,6 +1,5 @@
 import {useContext, useEffect, useState} from "react";
 import {Text, View, useWindowDimensions, Image, StyleSheet} from "react-native";
-import {fetchBlogData} from "../util/http";
 import RenderHTML from "react-native-render-html";
 import {FlashList} from "@shopify/flash-list";
 import {BlogContext} from "../store/context/blog-context";
@@ -24,7 +23,7 @@ function NewsAndEventsScreen() {
           source={source}
           enableExperimentalMarginCollapsing={true}
         /> */}
-        <Text>{itemData.item.blogTeaser}</Text>
+        <Text>{itemData.item.title}</Text>
       </View>
     );
   }
