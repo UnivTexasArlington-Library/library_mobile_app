@@ -11,8 +11,8 @@
       [
         "expo-notifications",
         {
-          "icon": "./local/assets/icon.png",
-          "color": "#ffffff",
+          "icon": "./assets/uta-star-logo.png",
+          "color": "#003865",
           "sounds": []
         }
       ]
@@ -23,11 +23,20 @@
       "buildNumber": "1.0.0",
       "supportsTablet": true
     },
-    "andriod": {
+    "icon": "./assets/adaptive-icon.png",
+    "backgroundColor": "#24180f",
+    "splash": {
+      "image": "./assets/uta-splashscreen.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#003865"
+    },
+    "android": {
+      "package": "com.uta.uta_libraries",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FFFFFF"
+        "backgroundColor": "#003865"
       }
     }
   }
