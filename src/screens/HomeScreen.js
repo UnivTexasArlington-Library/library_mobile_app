@@ -1,16 +1,23 @@
-import {
-  View,
-  StyleSheet,
-  useWindowDimensions,
-  ScrollView,
-  Platform,
-} from "react-native";
+import {View, StyleSheet, useWindowDimensions, ScrollView} from "react-native";
 import HeaderImage from "../components/HeaderImage";
 import Options from "../components/Options";
 import {useContext, useState, useEffect} from "react";
 import {BlogContext} from "../store/context/blog-context";
 import {fetchBlogData} from "../util/http";
 import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
+import * as Device from "expo-device";
+
+// export async function requestPermissionsAsync() {
+//   return await Notifications.requestPermissionsAsync({
+//     ios: {
+//       allowAlert: true,
+//       allowBadge: true,
+//       allowSound: true,
+//       allowAnnouncements: true,
+//     },
+//   });
+// }
 
 function Home({route, navigation}) {
   const {width, height} = useWindowDimensions();
@@ -22,36 +29,41 @@ function Home({route, navigation}) {
     }
     getBlogData();
   }, []);
-  useEffect(() => {
-    requestPermissionsAsync();
-  }, []);
-  useEffect(() => {
-    async function configurePushNotification() {
-      const {status} = await Notifications.getPermissionsAsync();
-      let finalStatus = status;
-      if (finalStatus !== "granted") {
-        const {status} = await Notifications.requestPermissionsAsync();
-        finalStatus = status;
-      }
-      if (finalStatus !== "granted") {
-        Alert.alert(
-          "Permission required",
-          "Push notificaitons need the appropriate permissions"
-        );
-        return;
-      }
-      const pushTokenData = await Notifications.getDevicePushTokenAsync();
-      console.log(pushTokenData);
 
+  useEffect(() => {
+    async function configurePushNotifications() {
+      let token;
       if (Platform.OS === "android") {
         Notifications.setNotificationChannelAsync("default", {
           name: "default",
           importance: Notifications.AndroidImportance.DEFAULT,
         });
       }
+      if (Device.isDevice) {
+        const {status: existingStatus} =
+          await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== "granted") {
+          const {status} = await Notifications.requestPermissionsAsync();
+          finalStatus = status;
+        }
+        if (finalStatus !== "granted") {
+          alert("Failed to get push token for push notification!");
+          return;
+        }
+        token = await Notifications.getExpoPushTokenAsync({
+          projectId: "6f20fa30-9859-40f9-ae27-a33e8f556ef6",
+        });
+        console.log("token", token);
+        const token2 = await Notifications.getDevicePushTokenAsync();
+        console.log(token2);
+      } else {
+        alert("Must use physical device for Push Notifications");
+      }
     }
-    configurePushNotification();
+    configurePushNotifications();
   }, []);
+
   useEffect(() => {
     const subscriptionOne = Notifications.addNotificationReceivedListener(
       (notification) => {
@@ -83,23 +95,6 @@ function Home({route, navigation}) {
       };
     },
   });
-
-  async function requestPermissionsAsync() {
-    return await Notifications.requestPermissionsAsync({
-      ios: {
-        allowAlert: true,
-        allowBadge: true,
-        allowSound: true,
-        allowAnnouncements: true,
-      },
-      android: {
-        allowAlert: true,
-        allowBadge: true,
-        allowSound: true,
-        allowAnnouncements: true,
-      },
-    });
-  }
 
   function scheduleNotificationHandler() {
     Notifications.scheduleNotificationAsync({

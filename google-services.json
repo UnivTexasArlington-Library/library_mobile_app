@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "785920815919",
+    "project_id": "uta-mobile-app-76c6b",
+    "storage_bucket": "uta-mobile-app-76c6b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:785920815919:android:ad5bf4d6963a3e2101a7da",
+        "android_client_info": {
+          "package_name": "com.uta.uta_libraries"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "785920815919-4sglioj9ko15254puvcn4ubf248k2brk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uta.uta_libraries",
+            "certificate_hash": "55904d933aedf6924aca8e8e4188c1e28b15bb0e"
+          }
+        },
+        {
+          "client_id": "785920815919-fv6o20lk87oceniujm9qp5nqr059nqub.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.uta.uta_libraries",
+            "certificate_hash": "75ebf067cd6b291e419f8e9ea7a5e7d8d017260e"
+          }
+        },
+        {
+          "client_id": "785920815919-frdjqo48gjt032vm2lf6i1nhbe3vleh9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzH-IhQCQnSGhAWq_Y79OUCknnkbDt7XA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "785920815919-frdjqo48gjt032vm2lf6i1nhbe3vleh9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
