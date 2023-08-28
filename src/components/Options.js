@@ -6,10 +6,10 @@ import {
   Ionicons,
 } from "@expo/vector-icons";
 import {GlobalStyles} from "../constants/styles";
-import React, {useEffect} from "react";
-import * as Notifications from "expo-notifications";
+import React from "react";
+import {scheduleNotificationHandler} from "../util/notificationTasks";
 
-const Options = ({navigation, onScheduleNotificationHandler}) => {
+const Options = ({navigation}) => {
   function openDrawerHandler(selectionOption) {
     navigation.navigate(selectionOption);
   }
@@ -88,7 +88,7 @@ const Options = ({navigation, onScheduleNotificationHandler}) => {
             styles.button,
             pressed ? styles.buttonPressed : null,
           ]}
-          onPress={() => onScheduleNotificationHandler()}
+          onPress={scheduleNotificationHandler}
           testID="event-pressable"
         >
           <Ionicons
