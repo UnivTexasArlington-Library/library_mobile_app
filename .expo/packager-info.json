@@ -1,9 +1,9 @@
 {
   "expoServerPort": null,
-  "packagerPort": null,
+  "packagerPort": 19000,
   "packagerPid": null,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "expoServerNgrokUrl": "https://qzvryvo.ej1seven.uta-librairies.exp.direct",
+  "packagerNgrokUrl": "https://qzvryvo.ej1seven.uta-librairies.exp.direct",
+  "ngrokPid": 8276,
   "webpackServerPort": null
 }
