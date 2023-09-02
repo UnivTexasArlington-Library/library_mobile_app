@@ -42,7 +42,10 @@ export async function extractParagraphandImageValues(blogIncludedData) {
       keyId: key,
       id: blogIncludedData[key].id,
     };
-    if (blogIncludedData[key].type === "paragraph--bp_simple") {
+    if (
+      blogIncludedData[key].type === "paragraph--bp_simple" &&
+      blogIncludedData[key].attributes.bp_text !== null
+    ) {
       includedDataObj.paragraphText =
         blogIncludedData[key].attributes.bp_text.value;
     } else if (

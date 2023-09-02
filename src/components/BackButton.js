@@ -6,10 +6,7 @@ function BackButton({navigation}) {
     <Pressable onPress={() => navigation.goBack()}>
       <View style={styles.rootContainer}>
         <View>
-          <Ionicons name="chevron-back" size={30} />
-        </View>
-        <View>
-          <Text style={styles.iconText}>Back</Text>
+          <Ionicons name="arrow-back-circle-sharp" size={30} color="white" />
         </View>
       </View>
     </Pressable>
@@ -24,10 +21,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-  },
-  iconText: {
-    fontSize: 20,
-    // textAlign: "center",
-    // marginTop: 4,
+    marginLeft: 8,
   },
 });

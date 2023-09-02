@@ -3,12 +3,14 @@ import HeaderImage from "../components/HeaderImage";
 import Options from "../components/Options";
 import {useContext, useState, useEffect} from "react";
 import {BlogContext} from "../store/context/blog-context";
-import {fetchBlogData} from "../util/http";
+import {fetchArticleData} from "../util/http";
 import * as Notifications from "expo-notifications";
 import {
   configurePushNotifications,
   localNotifications,
 } from "../util/notificationTasks";
+import {configureFcmInAppMessaging} from "../util/fcmTasks";
+import {LatestEventsContext} from "../store/context/latestEvents-context";
 
 // export async function requestPermissionsAsync() {
 //   return await Notifications.requestPermissionsAsync({
@@ -24,17 +26,24 @@ import {
 function Home({route, navigation}) {
   const {width, height} = useWindowDimensions();
   const blogContext = useContext(BlogContext);
+  const latestEventsContext = useContext(LatestEventsContext);
 
   useEffect(() => {
-    async function getBlogData() {
-      const blogs = await fetchBlogData();
+    async function getArticleData() {
+      const blogs = await fetchArticleData("blogs");
+      const latestEvents = await fetchArticleData("latestEvents");
       blogContext.setInitialBlogs(blogs);
+      latestEventsContext.setInitialLatestEvents(latestEvents);
     }
-    getBlogData();
+    getArticleData();
   }, []);
 
   useEffect(() => {
     configurePushNotifications();
+  }, []);
+
+  useEffect(() => {
+    configureFcmInAppMessaging();
   }, []);
 
   useEffect(() => {
