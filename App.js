@@ -8,40 +8,75 @@ import {
 } from "@react-navigation/drawer";
 import Home from "./src/screens/HomeScreen";
 import {GlobalStyles} from "./src/constants/styles";
-import BlogScreen from "./src/screens/NewsAndEventsScreen";
+import BlogScreen from "./src/screens/LatestEventsScreen";
 import BackButton from "./src/components/BackButton";
 import BlogContextProvider from "./src/store/context/blog-context";
-import {useEffect} from "react";
-import {configureFcmNotifications} from "./src/util/fcmTasks";
+import {useEffect, useCallback} from "react";
+import {
+  configureFcmInAppMessaging,
+  configureFcmNotifications,
+} from "./src/util/fcmTasks";
+import {useFonts} from "expo-font";
+import * as SplashScreen from "expo-splash-screen";
+import {StyleSheet, SafeAreaView} from "react-native";
+import BlogAndLatestEvents from "./src/screens/BlogAndLatestEvents";
+import LatestEventsContextProvider from "./src/store/context/latestEvents-context";
+import ArticleScreen from "./src/screens/ArticleScreen";
+
+SplashScreen.preventAutoHideAsync().catch((err) => console.log(err));
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigation({navigation}) {
+  const [fontsLoaded] = useFonts({
+    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+  });
+
+  const onLayoutRootView = useCallback(async () => {
+    if (fontsLoaded) {
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded]);
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
-    <Drawer.Navigator
-      screenOptions={{
-        headerLeft: () => <BackButton navigation={navigation} />,
-        drawerPosition: "right",
-        headerRight: () => <DrawerToggleButton />,
-        headerTitleAlign: "center",
-      }}
-    >
-      <Drawer.Screen
-        name="Home"
-        component={Home}
-        options={{
-          headerShown: false,
+    <SafeAreaView style={styles.rootScreen} onLayout={onLayoutRootView}>
+      <Drawer.Navigator
+        screenOptions={{
+          headerLeft: () => <BackButton navigation={navigation} />,
+          drawerPosition: "right",
+          headerRight: () => <DrawerToggleButton tintColor="white" />,
+          headerTitleAlign: "center",
+          drawerActiveTintColor: "white",
+          drawerInactiveTintColor: "black",
+          drawerActiveBackgroundColor: GlobalStyles.colors.primary800,
         }}
-      />
-      <Drawer.Screen
-        name="NewsAndEvents"
-        component={BlogScreen}
-        options={{
-          title: "News and Events",
-        }}
-      />
-    </Drawer.Navigator>
+      >
+        <Drawer.Screen
+          name="Home"
+          component={Home}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Drawer.Screen
+          name="BlogAndLatestEvents"
+          component={BlogAndLatestEvents}
+          options={{
+            title: "News and Events",
+            headerStyle: {
+              backgroundColor: GlobalStyles.colors.primary800,
+            },
+            headerTintColor: "white",
+          }}
+        />
+      </Drawer.Navigator>
+    </SafeAreaView>
   );
 }
 
@@ -53,26 +88,43 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <BlogContextProvider>
-        <NavigationContainer>
-          <Stack.Navigator
-            screenOptions={{
-              headerStyle: {backgroundColor: GlobalStyles.colors.primary500},
-              headerTintColor: "white",
-              tabBarStyle: {backgroundColor: GlobalStyles.colors.primary500},
-              tabBarActiveTintColor: GlobalStyles.colors.accent500,
-            }}
-          >
-            <Stack.Screen
-              name="Drawer"
-              component={DrawerNavigation}
-              options={{
-                headerShown: false,
+      <LatestEventsContextProvider>
+        <BlogContextProvider>
+          <NavigationContainer>
+            <Stack.Navigator
+              screenOptions={{
+                headerStyle: {backgroundColor: GlobalStyles.colors.primary500},
+                headerTintColor: "white",
+                tabBarStyle: {backgroundColor: GlobalStyles.colors.primary500},
+                tabBarActiveTintColor: GlobalStyles.colors.accent500,
               }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </BlogContextProvider>
+            >
+              <Stack.Screen
+                name="Drawer"
+                component={DrawerNavigation}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="Article"
+                component={ArticleScreen}
+                options={
+                  {
+                    // title: "Blog and Latest Events",
+                  }
+                }
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </BlogContextProvider>
+      </LatestEventsContextProvider>
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  rootScreen: {
+    flex: 1,
+  },
+});

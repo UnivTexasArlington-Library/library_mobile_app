@@ -1,6 +1,8 @@
 import messaging from "@react-native-firebase/messaging";
+import inAppMessaging from "@react-native-firebase/in-app-messaging";
 import {Alert} from "react-native";
 
+//Asks for the users permission to recieve notifications.
 const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
   const enabled =
@@ -13,7 +15,7 @@ const requestUserPermission = async () => {
 };
 
 //In order to use push notifications in a EAS build you must configure Firebase Cloud Messaging (FCM).
-export function configureFcmNotifications() {
+export async function configureFcmNotifications() {
   if (!__DEV__) {
     if (requestUserPermission()) {
       messaging()
@@ -53,4 +55,21 @@ export function configureFcmNotifications() {
     });
     return unsubscribe;
   }
+}
+
+// Firebase In-App Messaging allows you to create campaigns and customize elements such as Image, Banner, Modal & Cards to appear on predefined events
+export function configureFcmInAppMessaging() {
+  if (!__DEV__) {
+    if (requestUserPermission()) {
+      messaging()
+        .getToken()
+        .then((token) => {
+          console.log(token);
+        });
+    } else {
+      console.log("Failed token status");
+    }
+    inAppMessaging().setMessagesDisplaySuppressed(false);
+  }
+  return;
 }

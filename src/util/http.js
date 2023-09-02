@@ -1,20 +1,30 @@
 import axios from "axios";
-import {URL, newsAndEventsURL, URL_TEST} from "../constants/urls";
+import {URL, latestEventsURL, URL_TEST, blogURL} from "../constants/urls";
 import {
   createBodyHtml,
   createInitialPosts,
   extractParagraphandImageIds,
   extractParagraphandImageValues,
   getBlogFeaturedImageUrl,
-} from "./blog_newAndEvents_dataFormatter";
+} from "./blog_latestEvents_dataFormatter";
 
-export async function fetchBlogData() {
+export async function fetchArticleData(articleType, newURL) {
+  let blogOrLatestEventsUrl;
+  articleType === "blogs" && (blogOrLatestEventsUrl = blogURL);
+  articleType === "latestEvents" && (blogOrLatestEventsUrl = latestEventsURL);
   const response = await axios
-    .get(`${URL}${newsAndEventsURL}`, {
-      headers: {
-        "Content-Type": " text/plain",
-      },
-    })
+    .get(
+      `${
+        articleType === "newArticles"
+          ? newURL
+          : `${URL}${blogOrLatestEventsUrl}`
+      }`,
+      {
+        headers: {
+          "Content-Type": " text/plain",
+        },
+      }
+    )
     .catch(function (error) {
       if (error.response) {
         // The request was made and the server responded with a status code
@@ -45,5 +55,14 @@ export async function fetchBlogData() {
   );
   blogPosts = await createBodyHtml(blogPosts, blogIncludedParagraphsAndImages);
   blogPosts = await getBlogFeaturedImageUrl(blogPosts);
+  if (response.data.links.next !== undefined) {
+    blogPosts.next = response.data.links.next.href;
+  }
+  if (response.data.links.prev !== undefined) {
+    blogPosts.prev = response.data.links.prev.href;
+  }
+  if (response.data.links.first !== undefined) {
+    blogPosts.first = response.data.links.first.href;
+  }
   return blogPosts;
 }
