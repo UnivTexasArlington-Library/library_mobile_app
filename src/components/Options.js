@@ -49,29 +49,49 @@ const Options = ({navigation}) => {
           News and Events
         </Text>
       </Pressable>
-      {/* <View style={styles.gridItem}>
+      <Pressable
+        android_ripple={{color: "#ccc"}}
+        style={({pressed}) => [
+          styles.button,
+          pressed ? styles.buttonPressed : null,
+          ,
+          styles.gridItem,
+        ]}
+        onPress={() => openDrawerHandler("BlogAndLatestEvents")}
+        testID="event-pressable"
+      >
         <AntDesign
           name="clockcircleo"
           size={70}
-          color={GlobalStyles.colors.primary800}
+          color={GlobalStyles.colors.primary50}
           testID="hours-icon"
         />
         <Text style={styles.itemText} testID="hours-text">
           Hours
         </Text>
-      </View>
-      <View style={styles.gridItem}>
+      </Pressable>
+      <Pressable
+        android_ripple={{color: "#ccc"}}
+        style={({pressed}) => [
+          styles.button,
+          pressed ? styles.buttonPressed : null,
+          ,
+          styles.gridItem,
+        ]}
+        onPress={() => openDrawerHandler("Locations")}
+        testID="event-pressable"
+      >
         <FontAwesome5
           name="map-marked-alt"
           size={70}
-          color={GlobalStyles.colors.primary800}
+          color={GlobalStyles.colors.primary50}
           testID="locations-icon"
         />
         <Text style={styles.itemText} testID="locations-text">
           Department Locations
         </Text>
-      </View>
-      <View style={styles.gridItem}>
+      </Pressable>
+      {/* <View style={styles.gridItem}>
         <MaterialIcons
           name="person-search"
           size={70}
@@ -81,8 +101,8 @@ const Options = ({navigation}) => {
         <Text style={styles.itemText} testID="directory-text">
           Directory
         </Text>
-      </View>
-      <View style={styles.gridItem}>
+      </View> */}
+      {/* <View style={styles.gridItem}>
         <Pressable
           android_ripple={{color: "#ccc"}}
           style={({pressed}) => [
@@ -119,12 +139,13 @@ const styles = StyleSheet.create({
     rowGap: 40,
   },
   gridItem: {
-    width: "33%",
+    width: "30%",
+    height: 130,
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
     backgroundColor: GlobalStyles.colors.primary800,
-    margin: 10,
+    margin: 5,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: {

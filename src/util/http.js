@@ -1,8 +1,10 @@
 import axios from "axios";
 import {URL, latestEventsURL, URL_TEST, blogURL} from "../constants/urls";
 import {
+  convertDate,
   createBodyHtml,
   createInitialPosts,
+  extractAuthor,
   extractParagraphandImageIds,
   extractParagraphandImageValues,
   getBlogFeaturedImageUrl,
@@ -49,6 +51,8 @@ export async function fetchArticleData(articleType, newURL) {
   let blogIncludedParagraphsAndImages = [];
 
   blogPosts = await createInitialPosts(blogData);
+  blogPosts = await extractAuthor(blogPosts);
+  blogPosts = await convertDate(blogPosts);
   blogPosts = await extractParagraphandImageIds(blogPosts);
   blogIncludedParagraphsAndImages = await extractParagraphandImageValues(
     blogIncludedData
@@ -64,5 +68,6 @@ export async function fetchArticleData(articleType, newURL) {
   if (response.data.links.first !== undefined) {
     blogPosts.first = response.data.links.first.href;
   }
+  console.log(blogPosts.length);
   return blogPosts;
 }

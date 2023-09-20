@@ -8,32 +8,39 @@ import {
 } from "@react-navigation/drawer";
 import Home from "./src/screens/HomeScreen";
 import {GlobalStyles} from "./src/constants/styles";
-import BlogScreen from "./src/screens/LatestEventsScreen";
 import BackButton from "./src/components/BackButton";
 import BlogContextProvider from "./src/store/context/blog-context";
 import {useEffect, useCallback} from "react";
-import {
-  configureFcmInAppMessaging,
-  configureFcmNotifications,
-} from "./src/util/fcmTasks";
+import {configureFcmNotifications} from "./src/util/fcmTasks";
 import {useFonts} from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import {StyleSheet, SafeAreaView} from "react-native";
+import {StyleSheet, SafeAreaView, Dimensions, Image} from "react-native";
 import BlogAndLatestEvents from "./src/screens/BlogAndLatestEvents";
 import LatestEventsContextProvider from "./src/store/context/latestEvents-context";
 import ArticleScreen from "./src/screens/ArticleScreen";
+import LocationsScreen from "./src/screens/LocationsScreen";
+import MapScreen from "./src/screens/MapScreen";
+import * as Sentry from "sentry-expo";
 
+// Keep the splash screen visible while we fetch resources, This prevents SplashScreen from auto hiding while the fonts are loaded.
 SplashScreen.preventAutoHideAsync().catch((err) => console.log(err));
+
+Sentry.init({
+  dsn: "https://318ff9e98066266d1a30afbffb05b767@o4505909001191424.ingest.sentry.io/4505909010038784",
+  enableInExpoDevelopment: true,
+  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+});
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
 function DrawerNavigation({navigation}) {
+  // Pre-load fonts at runtime
   const [fontsLoaded] = useFonts({
     "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
     "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
   });
-
+  //After the custom fonts have loaded, we can hide the splash screen and display the app screen.
   const onLayoutRootView = useCallback(async () => {
     if (fontsLoaded) {
       await SplashScreen.hideAsync();
@@ -75,6 +82,17 @@ function DrawerNavigation({navigation}) {
             headerTintColor: "white",
           }}
         />
+        <Drawer.Screen
+          name="Locations"
+          component={MapScreen}
+          options={{
+            title: "Department Locations",
+            headerStyle: {
+              backgroundColor: GlobalStyles.colors.primary800,
+            },
+            headerTintColor: "white",
+          }}
+        />
       </Drawer.Navigator>
     </SafeAreaView>
   );
@@ -93,10 +111,14 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator
               screenOptions={{
-                headerStyle: {backgroundColor: GlobalStyles.colors.primary500},
+                headerStyle: {
+                  backgroundColor: GlobalStyles.colors.primary800,
+                },
                 headerTintColor: "white",
-                tabBarStyle: {backgroundColor: GlobalStyles.colors.primary500},
-                tabBarActiveTintColor: GlobalStyles.colors.accent500,
+                tabBarStyle: {
+                  backgroundColor: GlobalStyles.colors.primary800,
+                },
+                tabBarActiveTintColor: GlobalStyles.colors.primary800,
               }}
             >
               <Stack.Screen
@@ -109,12 +131,19 @@ export default function App() {
               <Stack.Screen
                 name="Article"
                 component={ArticleScreen}
-                options={
-                  {
-                    // title: "Blog and Latest Events",
-                  }
-                }
+                options={({navigation}) => ({
+                  headerLeft: () => <BackButton navigation={navigation} />,
+                  headerTitleAlign: "center",
+                })}
               />
+              {/* <Stack.Screen
+                name="Map"
+                component={MapScreen}
+                options={({navigation}) => ({
+                  headerLeft: () => <BackButton navigation={navigation} />,
+                  headerTitleAlign: "center",
+                })}
+              /> */}
             </Stack.Navigator>
           </NavigationContainer>
         </BlogContextProvider>
