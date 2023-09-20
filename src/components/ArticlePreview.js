@@ -7,9 +7,16 @@ import {
   Pressable,
 } from "react-native";
 
-function ArticlePreview({imageUrl, articleTitle, articleTeaser, navigation}) {
+function ArticlePreview({
+  imageUrl,
+  articleTitle,
+  articleTeaser,
+  author,
+  created,
+  bodyHTML,
+  navigation,
+}) {
   const {width} = useWindowDimensions();
-
   return (
     <Pressable
       android_ripple={{color: "#ccc"}}
@@ -17,7 +24,16 @@ function ArticlePreview({imageUrl, articleTitle, articleTeaser, navigation}) {
         styles.button,
         pressed ? styles.buttonPressed : null,
       ]}
-      onPress={() => navigation.navigate("Article", {imageUrl: imageUrl})}
+      onPress={() =>
+        navigation.navigate("Article", {
+          imageUrl: imageUrl,
+          articleTitle: articleTitle,
+          articleTeaser: articleTeaser,
+          author: author,
+          created: created,
+          bodyHTML: bodyHTML,
+        })
+      }
       testID="event-pressable"
     >
       <View

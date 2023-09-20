@@ -1,12 +1,5 @@
-import {useContext, useEffect, useState} from "react";
-import {
-  Button,
-  View,
-  useWindowDimensions,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
-import RenderHTML from "react-native-render-html";
+import {memo, useCallback, useContext, useState} from "react";
+import {View, useWindowDimensions, StyleSheet, Dimensions} from "react-native";
 import {FlashList} from "@shopify/flash-list";
 import ArticlePreview from "../components/ArticlePreview";
 import {ScrollView} from "react-native";
@@ -15,46 +8,69 @@ import {MaterialIcons, Foundation} from "@expo/vector-icons";
 import {GlobalStyles} from "../constants/styles";
 import {Pressable} from "react-native";
 import {fetchArticleData} from "../util/http";
+import LottieView from "lottie-react-native";
 
 function LatestEventsScreen({navigation}) {
   const {width, height} = useWindowDimensions();
   const latestEventsContext = useContext(LatestEventsContext);
   const latestEventsPosts = latestEventsContext.latestEvents;
+  const [isLoading, setIsLoading] = useState(false);
 
+  const LatestEventsList = memo(() => {
+    return (
+      <>
+        <>
+          <FlashList
+            data={latestEventsPosts}
+            keyExtractor={(item) => item.id}
+            renderItem={renderBlogItem}
+            estimatedItemSize={25}
+            testID="events-list"
+          />
+        </>
+      </>
+    );
+  });
+
+  //fetches new articles using the first, previous, or next url
   async function getNewArticles(url) {
+    setIsLoading(true);
     const latestEvents = await fetchArticleData("newArticles", url);
     latestEventsContext.setInitialLatestEvents(latestEvents);
+    setIsLoading(false);
   }
 
-  function renderBlogItem(itemData) {
-    const source = {
-      html: `${itemData.item.bodyHTML}`,
-    };
+  //individual article data passed down to ArticlePreview component
+  const renderBlogItem = useCallback((itemData) => {
     return (
       <ArticlePreview
         imageUrl={{uri: itemData.item.featuredImageLink}}
         articleTitle={itemData.item.title}
         articleTeaser={itemData.item.blogTeaser}
+        author={itemData.item.author}
+        created={itemData.item.created}
+        bodyHTML={itemData.item.bodyHTML}
         navigation={navigation}
       />
-      // <View testID="newsAndEvents-blogItem">
-      //   <Image
-      //     source={{uri: itemData.item.featuredImageLink}}
-      //     style={styles.image}
-      //   />
-      //   {/* <RenderHTML
-      //     contentWidth={width}
-      //     source={source}
-      //     enableExperimentalMarginCollapsing={true}
-      //   /> */}
-      //   <Text>{itemData.item.title}</Text>
-      // </View>
     );
-  }
+  }, []);
 
   return (
     <ScrollView>
       <View testID="LatestEventsScreen" style={{justifyContent: "center"}}>
+        {isLoading ? (
+          <View style={styles.loaderContainer}>
+            <LottieView
+              source={require("../../assets/loader.json")}
+              style={styles.loader}
+              autoPlay
+            />
+          </View>
+        ) : (
+          <>
+            <LatestEventsList />
+          </>
+        )}
         <View style={styles.buttonsContainer}>
           {latestEventsPosts.first && (
             <View>
@@ -123,14 +139,6 @@ function LatestEventsScreen({navigation}) {
             </View>
           )}
         </View>
-
-        <FlashList
-          data={latestEventsPosts}
-          keyExtractor={(item) => item.id}
-          renderItem={renderBlogItem}
-          estimatedItemSize={200}
-          testID="events-list"
-        />
       </View>
     </ScrollView>
   );
@@ -139,6 +147,7 @@ function LatestEventsScreen({navigation}) {
 export default LatestEventsScreen;
 
 const deviceWidth = Dimensions.get("window").width;
+const deviceHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   buttonsContainer: {
@@ -164,5 +173,16 @@ const styles = StyleSheet.create({
     shadowRadius: 2.62,
 
     elevation: 4,
+  },
+  loaderContainer: {
+    flex: 1,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    height: deviceHeight,
+  },
+  loader: {
+    width: deviceWidth,
+    height: 200,
   },
 });

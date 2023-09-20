@@ -15,7 +15,8 @@
           "color": "#003865",
           "sounds": []
         }
-      ]
+      ],
+      "sentry-expo"
     ],
     "name": "UTA Libraries",
     "version": "1.0.0",
@@ -37,7 +38,29 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#003865"
+      },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyB75GkI_prZqbBIEhrlzrvt_h_zcKGsuX8"
+        }
       }
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "university-of-texas-7b6bbe67a",
+            "project": "react-native"
+          }
+        }
+      ]
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6f20fa30-9859-40f9-ae27-a33e8f556ef6"
     }
   }
 }

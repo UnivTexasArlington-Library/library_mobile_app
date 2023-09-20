@@ -1,19 +1,52 @@
-import {useContext} from "react";
 import {View, useWindowDimensions} from "react-native";
-import RenderHTML from "react-native-render-html";
-import {FlashList} from "@shopify/flash-list";
-import {BlogContext} from "../store/context/blog-context";
-import ArticlePreview from "../components/ArticlePreview";
-import {ScrollView, StyleSheet, Image} from "react-native";
+import RenderHTML, {defaultSystemFonts} from "react-native-render-html";
+import {ScrollView, StyleSheet, Image, Dimensions} from "react-native";
 import {Text} from "react-native";
+import {GlobalStyles} from "../constants/styles";
 
 function ArticleScreen({route}) {
+  const systemFonts = [...defaultSystemFonts, "open-sans"];
   const {width, height} = useWindowDimensions();
-
+  const source = {
+    html: `<div style="font-size: 16px; fontFamily: 'open-sans'">${route.params.bodyHTML}</div>`,
+  };
+  const customCSS = {
+    img: {
+      width: width * 0.9,
+    },
+  };
   return (
     <ScrollView>
-      <View>
-        <Image source={route.params.imageUrl} style={styles.image} />
+      <View style={styles.rootContainer}>
+        <View style={styles.articleContent}>
+          <Text style={styles.title}>{route.params.articleTitle}</Text>
+          <View style={styles.subheading}>
+            {route.params.author && (
+              <>
+                <Text style={styles.subheadingText}>{route.params.author}</Text>
+                <Text
+                  style={{
+                    fontSize: 8,
+                    marginHorizontal: 8,
+                    color: GlobalStyles.colors.primary800,
+                  }}
+                >
+                  {"\u2B24"}
+                </Text>
+              </>
+            )}
+            <Text style={styles.subheadingText}>{route.params.created}</Text>
+          </View>
+          <Image source={route.params.imageUrl} style={styles.image} />
+          <Text style={styles.teaser}>{route.params.articleTeaser}</Text>
+          <RenderHTML
+            contentWidth={width}
+            source={source}
+            enableExperimentalMarginCollapsing={true}
+            systemFonts={systemFonts}
+            tagsStyles={customCSS}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -21,36 +54,43 @@ function ArticleScreen({route}) {
 
 export default ArticleScreen;
 
-const styles = StyleSheet.create({
-  articleContainer: {
-    width: "90%",
-    marginVertical: 12,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.23,
-    shadowRadius: 2.62,
+const deviceWidth = Dimensions.get("window").width;
 
-    elevation: 4,
+const styles = StyleSheet.create({
+  rootContainer: {
+    width: deviceWidth,
+    justifyContent: "center",
+    flexDirection: "row",
   },
-  articleTextContainer: {
-    marginVertical: 24,
-    paddingHorizontal: 8,
+  articleContent: {
+    width: "90%",
   },
   image: {
     height: 300,
     borderRadius: 8,
   },
   title: {
-    fontSize: 18,
-    marginBottom: 4,
+    fontSize: 25,
+    marginTop: 20,
     fontFamily: "open-sans-bold",
   },
+  subheading: {
+    fontSize: 16,
+    marginVertical: 20,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  subheadingText: {
+    fontFamily: "open-sans-bold",
+    color: GlobalStyles.colors.primary100,
+  },
   teaser: {
-    fontFamily: "open-sans",
+    fontSize: 18,
+    fontFamily: "open-sans-bold",
+    paddingVertical: 12,
+    marginVertical: 14,
+    borderTopWidth: 2,
+    borderBottomWidth: 2,
+    borderColor: GlobalStyles.colors.primary800,
   },
 });

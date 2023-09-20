@@ -1,5 +1,6 @@
 import axios from "axios";
 import {URL} from "../constants/urls";
+import {format} from "date-fns";
 
 // Retrieves blog data from the Drupal JSON:API and creates and array of blog post objects constaining the following properties:{keyId,id, title, created, bodyTextIds, bodyText, blogImageLink,blogTeaser}
 export async function createInitialPosts(blogData) {
@@ -10,18 +11,44 @@ export async function createInitialPosts(blogData) {
       keyId: key,
       id: blogData[key].id,
       title: blogData[key].attributes.title,
-      created: blogData[key].attributes.created,
+      created: format(
+        new Date(blogData[key].attributes.created),
+        "LLLL dd yyyy"
+      ),
       paragraphandImageIds:
         blogData[key].relationships.field_body_paragraphs.data,
       bodyHTML: [],
       featuredImageLink:
         blogData[key].relationships.field_featured_image.links.related.href,
       blogTeaser: blogData[key].attributes.field_blog_teaser_summary.value,
+      author: blogData[key].relationships.field_blog_author.links.related.href,
     };
     posts.push(blogPostObj);
   }
   return posts;
 }
+//Extracts the paragraph and image ids from the field_body_paragraphs array and reassigns the paragraphandImageIds property to a new array containing only Ids
+export async function extractAuthor(blogPosts) {
+  for (let i = 0; i < blogPosts.length; i++) {
+    const response = await axios.get(blogPosts[i].author);
+    const authorData = response.data.data?.attributes.title;
+    blogPosts[i].author = authorData;
+  }
+  return blogPosts;
+}
+export async function convertDate(blogPosts) {
+  for (let i = 0; i < blogPosts.length; i++) {
+    if (blogPosts[i].created === null) {
+      blogPosts[i].created = "";
+    }
+  }
+  return blogPosts;
+}
+
+// format(
+//   new Date(blogData[key].attributes.created),
+//   "LLLL dd yyyy"
+// )
 //Extracts the paragraph and image ids from the field_body_paragraphs array and reassigns the paragraphandImageIds property to a new array containing only Ids
 export async function extractParagraphandImageIds(blogPosts) {
   for (let i = 0; i < blogPosts.length; i++) {

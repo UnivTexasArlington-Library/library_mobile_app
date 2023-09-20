@@ -1,6 +1,5 @@
-import {useContext} from "react";
+import {useCallback, useContext, useState, memo} from "react";
 import {View, useWindowDimensions, Dimensions} from "react-native";
-import RenderHTML from "react-native-render-html";
 import {FlashList} from "@shopify/flash-list";
 import {BlogContext} from "../store/context/blog-context";
 import ArticlePreview from "../components/ArticlePreview";
@@ -10,46 +9,69 @@ import {GlobalStyles} from "../constants/styles";
 import {Pressable} from "react-native";
 import {MaterialIcons, Foundation} from "@expo/vector-icons";
 import {fetchArticleData} from "../util/http";
+import LottieView from "lottie-react-native";
 
 function BlogScreen({navigation}) {
   const {width, height} = useWindowDimensions();
   const blogContext = useContext(BlogContext);
   const blogPosts = blogContext.blogs;
+  const [isLoading, setIsLoading] = useState(false);
 
+  const BlogList = memo(() => {
+    return (
+      <>
+        <>
+          <FlashList
+            data={blogPosts}
+            keyExtractor={(item) => item.id}
+            renderItem={renderBlogItem}
+            estimatedItemSize={25}
+            testID="blog-list"
+          />
+        </>
+      </>
+    );
+  });
+
+  //fetches new articles using the first, previous, or next url
   async function getNewArticles(url) {
+    setIsLoading(true);
     const blogs = await fetchArticleData("newArticles", url);
     blogContext.setInitialBlogs(blogs);
+    setIsLoading(false);
   }
 
-  function renderBlogItem(itemData) {
-    const source = {
-      html: `${itemData.item.bodyHTML}`,
-    };
+  //individual article data passed down to ArticlePreview component
+  const renderBlogItem = useCallback((itemData) => {
     return (
       <ArticlePreview
         imageUrl={{uri: itemData.item.featuredImageLink}}
         articleTitle={itemData.item.title}
         articleTeaser={itemData.item.blogTeaser}
+        author={itemData.item.author}
+        created={itemData.item.created}
+        bodyHTML={itemData.item.bodyHTML}
         navigation={navigation}
       />
-      // <View testID="newsAndEvents-blogItem">
-      //   <Image
-      //     source={{uri: itemData.item.featuredImageLink}}
-      //     style={styles.image}
-      //   />
-      //   {/* <RenderHTML
-      //     contentWidth={width}
-      //     source={source}
-      //     enableExperimentalMarginCollapsing={true}
-      //   /> */}
-      //   <Text>{itemData.item.title}</Text>
-      // </View>
     );
-  }
+  }, []);
 
   return (
     <ScrollView>
       <View testID="BlogScreen" style={{justifyContent: "center"}}>
+        {isLoading ? (
+          <View style={styles.loaderContainer}>
+            <LottieView
+              source={require("../../assets/loader.json")}
+              style={styles.loader}
+              autoPlay
+            />
+          </View>
+        ) : (
+          <>
+            <BlogList />
+          </>
+        )}
         <View style={styles.buttonsContainer}>
           {blogPosts.first && (
             <View>
@@ -118,13 +140,6 @@ function BlogScreen({navigation}) {
             </View>
           )}
         </View>
-        <FlashList
-          data={blogPosts}
-          keyExtractor={(item) => item.id}
-          renderItem={renderBlogItem}
-          estimatedItemSize={200}
-          testID="blog-list"
-        />
       </View>
     </ScrollView>
   );
@@ -133,6 +148,7 @@ function BlogScreen({navigation}) {
 export default BlogScreen;
 
 const deviceWidth = Dimensions.get("window").width;
+const deviceHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   buttonsContainer: {
@@ -158,5 +174,16 @@ const styles = StyleSheet.create({
     shadowRadius: 2.62,
 
     elevation: 4,
+  },
+  loaderContainer: {
+    flex: 1,
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    height: deviceHeight,
+  },
+  loader: {
+    width: deviceWidth,
+    height: 200,
   },
 });

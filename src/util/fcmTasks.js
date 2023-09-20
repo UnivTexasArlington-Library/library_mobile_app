@@ -38,7 +38,6 @@ export async function configureFcmNotifications() {
         }
       });
     // Assume a message-notification contains a "type" property in the data payload of the screen to open
-
     messaging().onNotificationOpenedApp(async (remoteMessage) => {
       console.log(
         "Notification caused app to open from background state:",
