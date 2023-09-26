@@ -21,6 +21,17 @@ import ArticleScreen from "./src/screens/ArticleScreen";
 import LocationsScreen from "./src/screens/LocationsScreen";
 import MapScreen from "./src/screens/MapScreen";
 import * as Sentry from "sentry-expo";
+import {decode, encode} from "base-64";
+import LibCalContextProvider from "./src/store/context/libCal-context";
+import HoursScreen from "./src/screens/HoursScreen";
+
+if (!global.btoa) {
+  global.btoa = encode;
+}
+
+if (!global.atob) {
+  global.atob = decode;
+}
 
 // Keep the splash screen visible while we fetch resources, This prevents SplashScreen from auto hiding while the fonts are loaded.
 SplashScreen.preventAutoHideAsync().catch((err) => console.log(err));
@@ -83,6 +94,17 @@ function DrawerNavigation({navigation}) {
           }}
         />
         <Drawer.Screen
+          name="Hours"
+          component={HoursScreen}
+          options={{
+            title: "Library Hours",
+            headerStyle: {
+              backgroundColor: GlobalStyles.colors.primary800,
+            },
+            headerTintColor: "white",
+          }}
+        />
+        <Drawer.Screen
           name="Locations"
           component={MapScreen}
           options={{
@@ -106,37 +128,38 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <LatestEventsContextProvider>
-        <BlogContextProvider>
-          <NavigationContainer>
-            <Stack.Navigator
-              screenOptions={{
-                headerStyle: {
-                  backgroundColor: GlobalStyles.colors.primary800,
-                },
-                headerTintColor: "white",
-                tabBarStyle: {
-                  backgroundColor: GlobalStyles.colors.primary800,
-                },
-                tabBarActiveTintColor: GlobalStyles.colors.primary800,
-              }}
-            >
-              <Stack.Screen
-                name="Drawer"
-                component={DrawerNavigation}
-                options={{
-                  headerShown: false,
+      <LibCalContextProvider>
+        <LatestEventsContextProvider>
+          <BlogContextProvider>
+            <NavigationContainer>
+              <Stack.Navigator
+                screenOptions={{
+                  headerStyle: {
+                    backgroundColor: GlobalStyles.colors.primary800,
+                  },
+                  headerTintColor: "white",
+                  tabBarStyle: {
+                    backgroundColor: GlobalStyles.colors.primary800,
+                  },
+                  tabBarActiveTintColor: GlobalStyles.colors.primary800,
                 }}
-              />
-              <Stack.Screen
-                name="Article"
-                component={ArticleScreen}
-                options={({navigation}) => ({
-                  headerLeft: () => <BackButton navigation={navigation} />,
-                  headerTitleAlign: "center",
-                })}
-              />
-              {/* <Stack.Screen
+              >
+                <Stack.Screen
+                  name="Drawer"
+                  component={DrawerNavigation}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
+                <Stack.Screen
+                  name="Article"
+                  component={ArticleScreen}
+                  options={({navigation}) => ({
+                    headerLeft: () => <BackButton navigation={navigation} />,
+                    headerTitleAlign: "center",
+                  })}
+                />
+                {/* <Stack.Screen
                 name="Map"
                 component={MapScreen}
                 options={({navigation}) => ({
@@ -144,10 +167,11 @@ export default function App() {
                   headerTitleAlign: "center",
                 })}
               /> */}
-            </Stack.Navigator>
-          </NavigationContainer>
-        </BlogContextProvider>
-      </LatestEventsContextProvider>
+              </Stack.Navigator>
+            </NavigationContainer>
+          </BlogContextProvider>
+        </LatestEventsContextProvider>
+      </LibCalContextProvider>
     </>
   );
 }

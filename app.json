@@ -22,7 +22,13 @@
     "version": "1.0.0",
     "ios": {
       "buildNumber": "1.0.0",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "usesNonExemptEncryption": false,
+        "googleMaps": {
+          "apiKey": "AIzaSyB75GkI_prZqbBIEhrlzrvt_h_zcKGsuX8"
+        }
+      }
     },
     "icon": "./assets/adaptive-icon.png",
     "backgroundColor": "#24180f",

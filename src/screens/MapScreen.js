@@ -7,6 +7,7 @@ import {
   Image,
   Pressable,
   ScrollView,
+  Platform,
 } from "react-native";
 import MapView, {
   Marker,
@@ -18,6 +19,11 @@ import {GlobalStyles} from "../constants/styles";
 import {markers, polygons} from "../constants/mapData";
 import Carousel from "react-native-reanimated-carousel";
 import * as Sentry from "@sentry/react-native";
+import {useContext} from "react";
+import {LibCalContext} from "../store/context/libCal-context";
+import TodaysLibraryHours from "../components/TodaysLibraryHours";
+import {createOpenLink} from "react-native-open-maps";
+import OutlinedButton from "../components/OutlinedButton";
 
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
@@ -26,6 +32,7 @@ function MapScreen({navigation}) {
   try {
     const [markersData, setMarkersData] = useState([]);
     const [polygonsData, setPolygonsData] = useState([]);
+
     useEffect(() => {
       setMarkersData(markers);
       setPolygonsData(polygons);
@@ -48,11 +55,47 @@ function MapScreen({navigation}) {
           >
             <Image source={item.image} style={styles.cardImage} />
           </Pressable>
+          <View
+            style={{
+              marginVertical: 12,
+              flexDirection: "row",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            <View>
+              <Text style={styles.hoursText}>Today's Hours: </Text>
+            </View>
+            <View>
+              <Text style={styles.hoursText}>
+                <TodaysLibraryHours department={item.title} />
+              </Text>
+            </View>
+          </View>
+
           {item.description && (
             <Text style={[{marginTop: 12}, styles.cardText]}>
               {item.description}
             </Text>
           )}
+          <View
+            style={{
+              marginVertical: 12,
+              flexDirection: "row",
+              justifyContent: "center",
+              width: "100%",
+            }}
+          >
+            <OutlinedButton
+              onPress={createOpenLink({
+                provider: Platform.OS === "ios" ? "apple" : "google",
+                end: item.address,
+                mapType: "hybrid",
+              })}
+            >
+              Get Directions
+            </OutlinedButton>
+          </View>
         </ScrollView>
       </View>
     );
@@ -135,6 +178,9 @@ function MapScreen({navigation}) {
             width={deviceWidth}
             height={360}
             data={markersData}
+            panGestureHandlerProps={{
+              activeOffsetX: [-10, 10],
+            }}
             scrollAnimationDuration={1000}
             onSnapToItem={(index) => this.onCarouselItemChange(index)}
             renderItem={(item, index) => renderCarouselItem(item, index)}
@@ -170,7 +216,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 56, 101, 0.884)",
     height: 360,
     width: deviceWidth,
-    padding: 24,
+    padding: 16,
     borderRadius: 24,
     alignItems: "center",
   },
@@ -190,5 +236,9 @@ const styles = StyleSheet.create({
     fontSize: 22,
     alignSelf: "center",
     textAlign: "center",
+  },
+  hoursText: {
+    color: "white",
+    fontSize: 22,
   },
 });

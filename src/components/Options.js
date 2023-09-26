@@ -57,7 +57,7 @@ const Options = ({navigation}) => {
           ,
           styles.gridItem,
         ]}
-        onPress={() => openDrawerHandler("BlogAndLatestEvents")}
+        onPress={() => openDrawerHandler("Hours")}
         testID="event-pressable"
       >
         <AntDesign

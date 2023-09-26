@@ -22,6 +22,7 @@ export const markers = [
       "The Central Library is normally open 24 hours and contains numerous study spaces for quiet or collaborative study. Get help in the Academic Plaza or create something new in The Studios or FabLab. Our Special Collections on the 6th floor holds more than 1,500 archives and manuscript collections, primarily in Texas history, cartography, and the U.S.-Mexico War. When you need a break, visit the Market or Einstein Bros. Bagels for a snack. See Central Library Services Floor by Floor.",
     pinColor: GlobalStyles.colors.primary800,
     image: Images[0].image,
+    address: "702 Planetarium Pl., Arlington, TX",
   },
   {
     coordinate: {
@@ -34,6 +35,7 @@ export const markers = [
       "Located on the first floor of the CAPPA building, the West Campus Library (formerly AFA Library) holds a core print collection and digital research resources related to art, architecture, and music. It includes a study room with LCD display/web gateway and whiteboard that can be reserved in advance for 1-4 people.",
     pinColor: GlobalStyles.colors.primary800,
     image: Images[1].image,
+    address: "601 W. Nedderman Dr., Arlington, TX",
   },
   {
     coordinate: {
@@ -46,6 +48,7 @@ export const markers = [
       "Located in the basement of Nedderman Hall, the SEL holds a core print collection and digital research resources related to science and engineering. The SEL also has several group study rooms that may be reserved by the hour, some with LCD display and whiteboards. ",
     pinColor: GlobalStyles.colors.primary800,
     image: Images[2].image,
+    address: "416 S. Yates St., Arlington, TX",
   },
   {
     coordinate: {
@@ -58,6 +61,7 @@ export const markers = [
       "Central Library is home to a new gaming space! The Basement gives students a space to relax between classes while honing their critical thinking skills. ",
     pinColor: GlobalStyles.colors.primary50,
     image: Images[3].image,
+    address: "702 Planetarium Pl., Arlington, TX",
   },
   {
     coordinate: {
@@ -70,6 +74,7 @@ export const markers = [
       "Located in the Basement of Central Library (Room B29E), the DataCave provides support and services centering on data-driven research, e-science, and digital humanities data analysis. The DataCave is open whenever the Central Library is open. Consultations are available 9am-6pm or schedule an online appointment.",
     pinColor: GlobalStyles.colors.primary50,
     image: Images[4].image,
+    address: "702 Planetarium Pl., Arlington, TX",
   },
   {
     coordinate: {
@@ -82,6 +87,7 @@ export const markers = [
       "The FabLab fabrication laboratory on the first floor of Central Library is a creative hub for students, faculty, and staff, providing access to technologies, equipment, training, opportunities for interdisciplinary collaboration, and inspirational spaces in support of invention and entrepreneurship. This is hands-on learning at its best, for learners from any discipline or experience level.",
     pinColor: GlobalStyles.colors.primary50,
     image: Images[5].image,
+    address: "702 Planetarium Pl., Arlington, TX",
   },
   {
     coordinate: {
@@ -94,6 +100,7 @@ export const markers = [
       "Located on the sixth floor of Central Library, Special Collections offers a variety of physical and digital exhibitions throughout the year. The collections are also available to students, faculty, and guest scholars upon written request. For Special Collections related instruction, please contact Evan Spencer.",
     pinColor: GlobalStyles.colors.primary50,
     image: Images[6].image,
+    address: "702 Planetarium Pl., Arlington, TX",
   },
   {
     coordinate: {
@@ -106,6 +113,7 @@ export const markers = [
       "The Studios provide Mavericks with opportunities to create digital art and audio projects and optional consultation assistance provided by knowledgeable students and full-time staff.",
     pinColor: GlobalStyles.colors.primary50,
     image: Images[7].image,
+    address: "702 Planetarium Pl., Arlington, TX",
   },
 ];
 
