@@ -30,7 +30,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: GlobalStyles.colors.primary800,
+    borderColor: "white",
+    borderRadius: 8,
+    width: 250,
   },
   pressed: {
     opacity: 0.7,
@@ -39,6 +41,7 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
   text: {
-    color: GlobalStyles.colors.primary800,
+    color: "white",
+    fontSize: 22,
   },
 });

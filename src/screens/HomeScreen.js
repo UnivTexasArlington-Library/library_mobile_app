@@ -3,7 +3,7 @@ import HeaderImage from "../components/HeaderImage";
 import Options from "../components/Options";
 import {useContext, useEffect} from "react";
 import {BlogContext} from "../store/context/blog-context";
-import {fetchArticleData} from "../util/http";
+import {fetchArticleData, fetchTodaysLibraryHours} from "../util/http";
 import * as Notifications from "expo-notifications";
 import {
   configurePushNotifications,
@@ -13,6 +13,7 @@ import {configureFcmInAppMessaging} from "../util/fcmTasks";
 import {LatestEventsContext} from "../store/context/latestEvents-context";
 import LottieView from "lottie-react-native";
 import {GlobalStyles} from "../constants/styles";
+import {LibCalContext} from "../store/context/libCal-context";
 
 // export async function requestPermissionsAsync() {
 //   return await Notifications.requestPermissionsAsync({
@@ -28,6 +29,7 @@ import {GlobalStyles} from "../constants/styles";
 function Home({navigation}) {
   const blogContext = useContext(BlogContext);
   const latestEventsContext = useContext(LatestEventsContext);
+  const libCalContext = useContext(LibCalContext);
 
   useEffect(() => {
     async function getArticleData() {
@@ -37,6 +39,14 @@ function Home({navigation}) {
       latestEventsContext.setInitialLatestEvents(latestEvents);
     }
     getArticleData();
+  }, []);
+
+  useEffect(() => {
+    async function TodaysLibraryHours() {
+      const todaysLibHours = await fetchTodaysLibraryHours();
+      libCalContext.setInitialLibHours(todaysLibHours);
+    }
+    TodaysLibraryHours();
   }, []);
 
   useEffect(() => {
@@ -64,7 +74,8 @@ function Home({navigation}) {
   return (
     <>
       {blogContext.blogs.length > 0 &&
-      latestEventsContext.latestEvents.length > 0 ? (
+      latestEventsContext.latestEvents.length > 0 &&
+      libCalContext.todaysLibHours.length > 0 ? (
         <>
           <ScrollView>
             <View style={styles.rootContainer}>
