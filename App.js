@@ -24,6 +24,7 @@ import * as Sentry from "sentry-expo";
 import {decode, encode} from "base-64";
 import LibCalContextProvider from "./src/store/context/libCal-context";
 import HoursScreen from "./src/screens/HoursScreen";
+import InstagramContextProvider from "./src/store/context/instagram-context";
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -128,38 +129,39 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <LibCalContextProvider>
-        <LatestEventsContextProvider>
-          <BlogContextProvider>
-            <NavigationContainer>
-              <Stack.Navigator
-                screenOptions={{
-                  headerStyle: {
-                    backgroundColor: GlobalStyles.colors.primary800,
-                  },
-                  headerTintColor: "white",
-                  tabBarStyle: {
-                    backgroundColor: GlobalStyles.colors.primary800,
-                  },
-                  tabBarActiveTintColor: GlobalStyles.colors.primary800,
-                }}
-              >
-                <Stack.Screen
-                  name="Drawer"
-                  component={DrawerNavigation}
-                  options={{
-                    headerShown: false,
+      <InstagramContextProvider>
+        <LibCalContextProvider>
+          <LatestEventsContextProvider>
+            <BlogContextProvider>
+              <NavigationContainer>
+                <Stack.Navigator
+                  screenOptions={{
+                    headerStyle: {
+                      backgroundColor: GlobalStyles.colors.primary800,
+                    },
+                    headerTintColor: "white",
+                    tabBarStyle: {
+                      backgroundColor: GlobalStyles.colors.primary800,
+                    },
+                    tabBarActiveTintColor: GlobalStyles.colors.primary800,
                   }}
-                />
-                <Stack.Screen
-                  name="Article"
-                  component={ArticleScreen}
-                  options={({navigation}) => ({
-                    headerLeft: () => <BackButton navigation={navigation} />,
-                    headerTitleAlign: "center",
-                  })}
-                />
-                {/* <Stack.Screen
+                >
+                  <Stack.Screen
+                    name="Drawer"
+                    component={DrawerNavigation}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="Article"
+                    component={ArticleScreen}
+                    options={({navigation}) => ({
+                      headerLeft: () => <BackButton navigation={navigation} />,
+                      headerTitleAlign: "center",
+                    })}
+                  />
+                  {/* <Stack.Screen
                 name="Map"
                 component={MapScreen}
                 options={({navigation}) => ({
@@ -167,11 +169,12 @@ export default function App() {
                   headerTitleAlign: "center",
                 })}
               /> */}
-              </Stack.Navigator>
-            </NavigationContainer>
-          </BlogContextProvider>
-        </LatestEventsContextProvider>
-      </LibCalContextProvider>
+                </Stack.Navigator>
+              </NavigationContainer>
+            </BlogContextProvider>
+          </LatestEventsContextProvider>
+        </LibCalContextProvider>
+      </InstagramContextProvider>
     </>
   );
 }

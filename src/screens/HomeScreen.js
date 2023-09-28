@@ -1,9 +1,13 @@
 import {View, StyleSheet, ScrollView, Image, Dimensions} from "react-native";
 import HeaderImage from "../components/HeaderImage";
 import Options from "../components/Options";
-import {useContext, useEffect} from "react";
+import {useContext, useEffect, useState, useRef} from "react";
 import {BlogContext} from "../store/context/blog-context";
-import {fetchArticleData, fetchTodaysLibraryHours} from "../util/http";
+import {
+  fetchArticleData,
+  fetchInstagramReels,
+  fetchTodaysLibraryHours,
+} from "../util/http";
 import * as Notifications from "expo-notifications";
 import {
   configurePushNotifications,
@@ -14,6 +18,11 @@ import {LatestEventsContext} from "../store/context/latestEvents-context";
 import LottieView from "lottie-react-native";
 import {GlobalStyles} from "../constants/styles";
 import {LibCalContext} from "../store/context/libCal-context";
+import {Video, ResizeMode} from "expo-av";
+import OutlinedButton from "../components/OutlinedButton";
+import InstagramReelsSlideshow from "../components/InstagramReelsSlideshow";
+import {InstagramContext} from "../store/context/instagram-context";
+import SocialMediaLinks from "../components/SocialMediaLinks";
 
 // export async function requestPermissionsAsync() {
 //   return await Notifications.requestPermissionsAsync({
@@ -30,6 +39,7 @@ function Home({navigation}) {
   const blogContext = useContext(BlogContext);
   const latestEventsContext = useContext(LatestEventsContext);
   const libCalContext = useContext(LibCalContext);
+  const instagramContext = useContext(InstagramContext);
 
   useEffect(() => {
     async function getArticleData() {
@@ -47,6 +57,15 @@ function Home({navigation}) {
       libCalContext.setInitialLibHours(todaysLibHours);
     }
     TodaysLibraryHours();
+  }, []);
+
+  useEffect(() => {
+    async function InstagramReels() {
+      const instagramReels = await fetchInstagramReels();
+      instagramContext.setInitialInstagramReels(instagramReels);
+      // console.log(instagramReels);
+    }
+    InstagramReels();
   }, []);
 
   useEffect(() => {
@@ -75,12 +94,15 @@ function Home({navigation}) {
     <>
       {blogContext.blogs.length > 0 &&
       latestEventsContext.latestEvents.length > 0 &&
-      libCalContext.todaysLibHours.length > 0 ? (
+      libCalContext.todaysLibHours.length > 0 &&
+      instagramContext.instagramReels.length > 0 ? (
         <>
           <ScrollView>
             <View style={styles.rootContainer}>
               <HeaderImage />
               <Options navigation={navigation} />
+              <SocialMediaLinks />
+              <InstagramReelsSlideshow />
             </View>
           </ScrollView>
         </>
