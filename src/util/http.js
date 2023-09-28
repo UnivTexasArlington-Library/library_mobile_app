@@ -1,5 +1,12 @@
 import axios from "axios";
-import {URL, latestEventsURL, URL_TEST, blogURL} from "../constants/urls";
+import {
+  URL,
+  latestEventsURL,
+  URL_TEST,
+  blogURL,
+  instagramAccessToken,
+  instagramID,
+} from "../constants/urls";
 import {
   convertDate,
   createBodyHtml,
@@ -201,4 +208,79 @@ export async function getAllLocationHoursForSpecificDate(day) {
     });
   console.log("locationsNameAndHours", locationNameAndHours);
   return locationNameAndHours;
+}
+
+export async function fetchInstagramReels() {
+  let instagramReels = [];
+  await axios
+    .get(
+      `https://graph.instagram.com/${instagramID}/media?access_token=${instagramAccessToken}&fields=media_url,permalink`,
+      {
+        headers: {
+          "Content-Type": " text/plain",
+        },
+      }
+    )
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+      }
+      console.log(error.config);
+    })
+    .then(async (response) => {
+      const filteredArray = response.data.data.filter((post) =>
+        post.permalink.includes("reel")
+      );
+      for (let i = 0; i < filteredArray.length; i++) {
+        instagramReels.push(filteredArray[i]);
+      }
+      // console.log(response.data.paging.next);
+      await axios
+        .get(`${response.data.paging.next}`, {
+          headers: {
+            "Content-Type": " text/plain",
+          },
+        })
+        .catch(function (error) {
+          if (error.response) {
+            // The request was made and the server responded with a status code
+            // that falls out of the range of 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+          } else if (error.request) {
+            // The request was made but no response was received
+            // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+            // http.ClientRequest in node.js
+            console.log(error.request);
+          } else {
+            // Something happened in setting up the request that triggered an Error
+            console.log("Error", error.message);
+          }
+          console.log(error.config);
+        })
+        .then(async (responseTwo) => {
+          const filteredArrayTwo = responseTwo.data.data.filter((post) =>
+            post.permalink.includes("reel")
+          );
+          for (let i = 0; i < filteredArrayTwo.length; i++) {
+            instagramReels.push(filteredArrayTwo[i]);
+          }
+          // console.log("responseTwo", responseTwo.data.data);
+        });
+      // console.log("instagram reels", instagramReels.slice(0, 15).length);
+    });
+  return instagramReels.slice(0, 15);
 }

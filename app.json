@@ -16,6 +16,12 @@
           "sounds": []
         }
       ],
+      [
+        "expo-screen-orientation",
+        {
+          "initialOrientation": "DEFAULT"
+        }
+      ],
       "sentry-expo"
     ],
     "name": "UTA Libraries",
@@ -28,7 +34,8 @@
         "googleMaps": {
           "apiKey": "AIzaSyB75GkI_prZqbBIEhrlzrvt_h_zcKGsuX8"
         }
-      }
+      },
+      "requireFullScreen": true
     },
     "icon": "./assets/adaptive-icon.png",
     "backgroundColor": "#24180f",

@@ -7,3 +7,6 @@ export const latestEventsURL = process.env.EXPO_PUBLIC_NEWS_AND_EVENT_URL;
 //The following Drupal JSON:API URL is used for gathering data related to the blog.
 export const blogURL = process.env.EXPO_PUBLIC_BLOG_URL;
 export const mapsAccessToken = process.env.EXPO_PUBLIC_MAPS_ACCESS_TOKEN;
+export const instagramAccessToken =
+  process.env.EXPO_PUBLIC_INSTAGRAM_ACCESS_TOKEN;
+export const instagramID = process.env.EXPO_PUBLIC_INSTAGRAM_ID;
