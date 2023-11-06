@@ -21,9 +21,7 @@ import * as Linking from "expo-linking";
 const SocialMediaLinks = () => {
   return (
     <View style={styles.rootContainer}>
-      <Text style={styles.headerText}>
-        Check out UTA Libraries on social media!
-      </Text>
+      <Text style={styles.headerText}>Social Media</Text>
       <View style={styles.gridContainer}>
         <Pressable
           android_ripple={{color: "#ccc"}}
@@ -132,9 +130,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
   },
   headerText: {
-    textAlign: "center",
-    color: "black",
-    fontSize: 16,
+    textAlign: "left",
+    color: GlobalStyles.colors.primary500,
+    fontSize: 24,
     fontFamily: "open-sans-bold",
   },
   gridContainer: {
@@ -143,7 +141,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flex: 1,
-    rowGap: 40,
     paddingTop: 10,
   },
   gridItem: {
@@ -153,7 +150,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     backgroundColor: "white",
-    margin: 2,
+    margin: 3,
     borderRadius: 8,
     shadowColor: "#000",
     shadowOffset: {

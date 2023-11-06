@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     alignItems: "center",
     justifyContent: "center",
+    height: 120,
   },
   backgroundImage: {
     width: deviceWidth,
