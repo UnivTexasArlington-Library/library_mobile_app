@@ -35,7 +35,8 @@
           "apiKey": "AIzaSyB75GkI_prZqbBIEhrlzrvt_h_zcKGsuX8"
         }
       },
-      "requireFullScreen": true
+      "requireFullScreen": true,
+      "bundleIdentifier": "com.ej1seven.utalibraries"
     },
     "icon": "./assets/adaptive-icon.png",
     "backgroundColor": "#24180f",

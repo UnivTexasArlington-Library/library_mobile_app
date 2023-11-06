@@ -209,6 +209,90 @@ export async function getAllLocationHoursForSpecificDate(day) {
   console.log("locationsNameAndHours", locationNameAndHours);
   return locationNameAndHours;
 }
+export async function retrieveBookings(categoryId, date, spaceId) {
+  let bookings = [];
+  await axios
+    .get(
+      `https://uta.libcal.com/1.1/space/bookings?cid=${categoryId}&date=${date}`,
+      {
+        headers: {
+          Authorization: `Bearer ${await SecureStore.getItemAsync(
+            "libCal_access_token"
+          )}`,
+        },
+      }
+    )
+    .then(async (response) => {
+      // console.log(
+      //   "bookings",
+      //   response.data.length
+      //   // response.data[0].fromDate,
+      //   // response.data[0].toDate
+      // );
+      for (let i = 0; i < response.data.length; i++) {
+        // console.log(response.data[i].eid);
+        if (response.data[i].eid == spaceId) {
+          console.log(
+            `values ${response.data[i].eid} and ${spaceId} are equal`
+          );
+          let bookingsObj = {};
+          // console.log("bookings", response.data[i].fromDate);
+          bookingsObj.from = response.data[i].fromDate;
+          bookingsObj.to = response.data[i].toDate;
+          bookings.push(bookingsObj);
+        } else {
+          console.log("values are not equal");
+        }
+        // console.log("eid", response.data[i].eid);
+      }
+    });
+  // console.log("bookings array", bookings);
+  return bookings;
+}
+
+export async function retrieveAvailabilty(
+  locationId,
+  categoryId,
+  spaceId,
+  date
+) {
+  let availabilityHours = [];
+  await axios
+    .get(
+      `https://uta.libcal.com/1.1/space/items/${locationId}?&categoryId=${categoryId}&availability=${date}`,
+      {
+        headers: {
+          Authorization: `Bearer ${await SecureStore.getItemAsync(
+            "libCal_access_token"
+          )}`,
+        },
+      }
+    )
+    .then(async (response) => {
+      // console.log("availabilty", response.data[0]);
+
+      for (let i = 0; i < response.data.length; i++) {
+        if (response.data[i].id == spaceId) {
+          console.log("availabilty", response.data[i].availability);
+          console.log(
+            `availabilty values ${response.data[i].id} and ${spaceId} are equal`
+          );
+          for (let j = 0; j < response.data[i].availability.length; j++) {
+            let availabilityObj = {};
+            availabilityObj.from = response.data[i].availability[j].from;
+            availabilityObj.to = response.data[i].availability[j].to;
+            availabilityHours.push(availabilityObj);
+          }
+
+          // console.log("bookings", response.data[i].fromDate);
+
+          // availabilityHours = response.data[0].availability;
+        }
+      }
+    });
+  // console.log("locationsNameAndHours", locationNameAndHours);
+  return availabilityHours;
+}
 
 export async function fetchInstagramReels() {
   let instagramReels = [];
@@ -283,4 +367,65 @@ export async function fetchInstagramReels() {
       // console.log("instagram reels", instagramReels.slice(0, 15).length);
     });
   return instagramReels.slice(0, 15);
+}
+
+export async function postBooking(
+  startTime,
+  finishTime,
+  item,
+  firstName,
+  lastName,
+  email
+) {
+  let responseText = "";
+  await axios
+    .post(
+      `https://uta.libcal.com/1.1/space/reserve`,
+      {
+        start: startTime,
+        fname: firstName,
+        lname: lastName,
+        email: email,
+        bookings: [
+          {
+            id: item,
+            to: finishTime,
+          },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${await SecureStore.getItemAsync(
+            "libCal_access_token"
+          )}`,
+        },
+      }
+    )
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        return (responseText = error.response.data.toString());
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        console.log(error.request);
+        return (responseText = error.request.toString());
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log("Error", error.message);
+        return (responseText = error.message.toString());
+      }
+    })
+    .then(async (response) => {
+      console.log(response);
+      if (response.status === 200) {
+        return (responseText = "success");
+      }
+    });
+  return responseText;
 }

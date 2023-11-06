@@ -1,4 +1,11 @@
-import {View, StyleSheet, ScrollView, Image, Dimensions} from "react-native";
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  Image,
+  Dimensions,
+  Text,
+} from "react-native";
 import HeaderImage from "../components/HeaderImage";
 import Options from "../components/Options";
 import {useContext, useEffect, useState, useRef} from "react";
@@ -23,6 +30,7 @@ import OutlinedButton from "../components/OutlinedButton";
 import InstagramReelsSlideshow from "../components/InstagramReelsSlideshow";
 import {InstagramContext} from "../store/context/instagram-context";
 import SocialMediaLinks from "../components/SocialMediaLinks";
+import Resources from "../components/Resources";
 
 // export async function requestPermissionsAsync() {
 //   return await Notifications.requestPermissionsAsync({
@@ -100,9 +108,11 @@ function Home({navigation}) {
           <ScrollView>
             <View style={styles.rootContainer}>
               <HeaderImage />
+              <Text style={styles.sectionText}>Popular Categories</Text>
               <Options navigation={navigation} />
               <SocialMediaLinks />
               <InstagramReelsSlideshow />
+              <Resources navigation={navigation} />
             </View>
           </ScrollView>
         </>
@@ -151,5 +161,13 @@ const styles = StyleSheet.create({
     height: 200,
     position: "absolute",
     bottom: 40,
+  },
+  sectionText: {
+    textAlign: "left",
+    color: GlobalStyles.colors.primary500,
+    fontSize: 24,
+    fontFamily: "open-sans-bold",
+    width: deviceWidth,
+    padding: 10,
   },
 });

@@ -25,6 +25,9 @@ import {decode, encode} from "base-64";
 import LibCalContextProvider from "./src/store/context/libCal-context";
 import HoursScreen from "./src/screens/HoursScreen";
 import InstagramContextProvider from "./src/store/context/instagram-context";
+import ReserveScreen from "./src/screens/ReserveScreen";
+import ReserveHoursContextProvider from "./src/store/context/reserveHours-context";
+import BookingScreen from "./src/screens/BookingScreen";
 
 if (!global.btoa) {
   global.btoa = encode;
@@ -116,6 +119,31 @@ function DrawerNavigation({navigation}) {
             headerTintColor: "white",
           }}
         />
+        <Drawer.Screen
+          name="Reserve"
+          component={ReserveScreen}
+          options={{
+            title: "Reserve Room",
+            headerStyle: {
+              backgroundColor: GlobalStyles.colors.primary800,
+            },
+            headerTintColor: "white",
+          }}
+        />
+        <Drawer.Screen
+          name="Booking"
+          component={BookingScreen}
+          options={{
+            title: "Booking Details",
+            headerStyle: {
+              backgroundColor: GlobalStyles.colors.primary800,
+            },
+            headerTintColor: "white",
+            drawerItemStyle: {
+              display: "none",
+            },
+          }}
+        />
       </Drawer.Navigator>
     </SafeAreaView>
   );
@@ -129,39 +157,42 @@ export default function App() {
   return (
     <>
       <StatusBar style="light" />
-      <InstagramContextProvider>
-        <LibCalContextProvider>
-          <LatestEventsContextProvider>
-            <BlogContextProvider>
-              <NavigationContainer>
-                <Stack.Navigator
-                  screenOptions={{
-                    headerStyle: {
-                      backgroundColor: GlobalStyles.colors.primary800,
-                    },
-                    headerTintColor: "white",
-                    tabBarStyle: {
-                      backgroundColor: GlobalStyles.colors.primary800,
-                    },
-                    tabBarActiveTintColor: GlobalStyles.colors.primary800,
-                  }}
-                >
-                  <Stack.Screen
-                    name="Drawer"
-                    component={DrawerNavigation}
-                    options={{
-                      headerShown: false,
+      <ReserveHoursContextProvider>
+        <InstagramContextProvider>
+          <LibCalContextProvider>
+            <LatestEventsContextProvider>
+              <BlogContextProvider>
+                <NavigationContainer>
+                  <Stack.Navigator
+                    screenOptions={{
+                      headerStyle: {
+                        backgroundColor: GlobalStyles.colors.primary800,
+                      },
+                      headerTintColor: "white",
+                      tabBarStyle: {
+                        backgroundColor: GlobalStyles.colors.primary800,
+                      },
+                      tabBarActiveTintColor: GlobalStyles.colors.primary800,
                     }}
-                  />
-                  <Stack.Screen
-                    name="Article"
-                    component={ArticleScreen}
-                    options={({navigation}) => ({
-                      headerLeft: () => <BackButton navigation={navigation} />,
-                      headerTitleAlign: "center",
-                    })}
-                  />
-                  {/* <Stack.Screen
+                  >
+                    <Stack.Screen
+                      name="Drawer"
+                      component={DrawerNavigation}
+                      options={{
+                        headerShown: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="Article"
+                      component={ArticleScreen}
+                      options={({navigation}) => ({
+                        headerLeft: () => (
+                          <BackButton navigation={navigation} />
+                        ),
+                        headerTitleAlign: "center",
+                      })}
+                    />
+                    {/* <Stack.Screen
                 name="Map"
                 component={MapScreen}
                 options={({navigation}) => ({
@@ -169,12 +200,13 @@ export default function App() {
                   headerTitleAlign: "center",
                 })}
               /> */}
-                </Stack.Navigator>
-              </NavigationContainer>
-            </BlogContextProvider>
-          </LatestEventsContextProvider>
-        </LibCalContextProvider>
-      </InstagramContextProvider>
+                  </Stack.Navigator>
+                </NavigationContainer>
+              </BlogContextProvider>
+            </LatestEventsContextProvider>
+          </LibCalContextProvider>
+        </InstagramContextProvider>
+      </ReserveHoursContextProvider>
     </>
   );
 }

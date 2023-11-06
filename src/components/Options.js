@@ -45,9 +45,11 @@ const Options = ({navigation}) => {
           color={GlobalStyles.colors.primary50}
           testID="event-icon"
         />
-        <Text style={styles.itemText} testID="events-text">
-          News and Events
-        </Text>
+        <View style={styles.itemTextContainer}>
+          <Text style={styles.itemText} testID="events-text">
+            News and Events
+          </Text>
+        </View>
       </Pressable>
       <Pressable
         android_ripple={{color: "#ccc"}}
@@ -66,9 +68,11 @@ const Options = ({navigation}) => {
           color={GlobalStyles.colors.primary50}
           testID="hours-icon"
         />
-        <Text style={styles.itemText} testID="hours-text">
-          Hours
-        </Text>
+        <View style={styles.itemTextContainer}>
+          <Text style={styles.itemText} testID="hours-text">
+            Hours
+          </Text>
+        </View>
       </Pressable>
       <Pressable
         android_ripple={{color: "#ccc"}}
@@ -87,9 +91,11 @@ const Options = ({navigation}) => {
           color={GlobalStyles.colors.primary50}
           testID="locations-icon"
         />
-        <Text style={styles.itemText} testID="locations-text">
-          Department Locations
-        </Text>
+        <View style={styles.itemTextContainer}>
+          <Text style={styles.itemText} testID="locations-text">
+            Department Locations
+          </Text>
+        </View>
       </Pressable>
       {/* <View style={styles.gridItem}>
         <MaterialIcons
@@ -157,7 +163,9 @@ const styles = StyleSheet.create({
 
     elevation: 4,
   },
-
+  itemTextContainer: {
+    height: 45,
+  },
   itemText: {
     fontSize: 15,
     textAlign: "center",

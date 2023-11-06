@@ -8,6 +8,9 @@ import {
   Pressable,
   ScrollView,
   Platform,
+  Alert,
+  Button,
+  TouchableOpacity,
 } from "react-native";
 import MapView, {
   Marker,
@@ -19,6 +22,7 @@ import {GlobalStyles} from "../constants/styles";
 import {markers, polygons} from "../constants/mapData";
 import Carousel from "react-native-reanimated-carousel";
 import * as Sentry from "@sentry/react-native";
+import * as Location from "expo-location";
 import {useContext} from "react";
 import {LibCalContext} from "../store/context/libCal-context";
 import TodaysLibraryHours from "../components/TodaysLibraryHours";
@@ -32,6 +36,32 @@ function MapScreen({navigation}) {
   try {
     const [markersData, setMarkersData] = useState([]);
     const [polygonsData, setPolygonsData] = useState([]);
+    const [status] = Location.useForegroundPermissions();
+
+    const CheckIfLocationEnabled = async () => {
+      if (!status.granted) {
+        Alert.alert(
+          "Location Service not enabled",
+          "Please enable your location services to continue",
+          [
+            {
+              text: "OK",
+              onPress: async () => {
+                await Location.requestForegroundPermissionsAsync();
+                if (!status.granted) {
+                  return Alert.alert(
+                    "Permission to access location was denied",
+                    [{text: "OK"}]
+                  );
+                }
+                await Location.requestBackgroundPermissionsAsync();
+              },
+            },
+            {text: "Cancel"},
+          ]
+        );
+      }
+    };
 
     useEffect(() => {
       setMarkersData(markers);
@@ -126,6 +156,12 @@ function MapScreen({navigation}) {
 
     return (
       <View style={styles.rootContainer}>
+        <TouchableOpacity
+          onPress={() => CheckIfLocationEnabled()}
+          style={[styles.locateButton]}
+        >
+          <Text style={styles.locateButtonText}>Enable Location</Text>
+        </TouchableOpacity>
         <MapView
           ref={(map) => (this._map = map)}
           style={styles.map}
@@ -240,5 +276,20 @@ const styles = StyleSheet.create({
   hoursText: {
     color: "white",
     fontSize: 22,
+  },
+  locateButton: {
+    width: 100,
+    backgroundColor: GlobalStyles.colors.primary800,
+    borderRadius: 4,
+    borderColor: "#fff",
+    borderWidth: 2,
+    position: "absolute",
+    padding: 4,
+    top: 10,
+    left: 10,
+  },
+  locateButtonText: {
+    color: "#fff",
+    textAlign: "center",
   },
 });
