@@ -71,7 +71,7 @@ const SocialMediaLinks = () => {
           testID="event-pressable"
         >
           <Image
-            source={require("../../assets/images/twitter.png")}
+            source={require("../../assets/images/twitterX.png")}
             style={{width: 40, height: 40}}
           />
         </Pressable>
