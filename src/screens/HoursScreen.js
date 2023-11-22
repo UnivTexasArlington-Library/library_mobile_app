@@ -1,24 +1,15 @@
 import React, {
-  useState,
   Fragment,
   useCallback,
-  useMemo,
-  useRef,
   useEffect,
+  useMemo,
+  useState,
 } from "react";
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from "react-native";
+import {Dimensions, ScrollView, StyleSheet, Text, View} from "react-native";
 import {Calendar, CalendarUtils} from "react-native-calendars";
-import {locationIDs} from "../constants/locationIDs";
-import {getAllLocationHoursForSpecificDate} from "../util/http";
 import {GlobalStyles} from "../constants/styles";
-
+import {getAllLocationHoursForSpecificDate} from "../util/http";
+//set INITIAL_DATE to today's date
 const INITIAL_DATE = new Date().toDateString();
 
 function HoursScreen({navigation}) {
@@ -31,6 +22,8 @@ function HoursScreen({navigation}) {
     return CalendarUtils.getCalendarDateString(newDate);
   };
 
+  //Get the location hours for the selected calendar date and
+  //set the selected day to the new calendar date chosen by the user
   const onDayPress = useCallback(async (day) => {
     const locationHours = await getAllLocationHoursForSpecificDate(
       day.dateString
@@ -39,7 +32,7 @@ function HoursScreen({navigation}) {
     console.log(locationHours);
     setSelected(day.dateString);
   }, []);
-
+  //Retrieve the inital location hours
   useEffect(() => {
     async function getInitialLocationHours() {
       const locationHours = await getAllLocationHoursForSpecificDate(
@@ -49,7 +42,8 @@ function HoursScreen({navigation}) {
     }
     getInitialLocationHours();
   }, []);
-
+  //Set the initial marked calendar day dot color to orange
+  //and the selected dot color to dark blue
   const marked = useMemo(() => {
     return {
       [getDate(0)]: {
@@ -87,6 +81,8 @@ function HoursScreen({navigation}) {
         <View style={styles.locationsContainer}>
           {locationHours?.map((location) => {
             return (
+              // If the location is closed show a red box-shadow around the containter
+              // otherwise show a green box-shadow
               <View
                 key={location.name}
                 style={[
@@ -96,6 +92,8 @@ function HoursScreen({navigation}) {
                   },
                 ]}
               >
+                {/* If the specific location is current closed display the text Closed in the color red 
+                otherwise display the text Open in green text */}
                 <View style={styles.locationCardHeader}>
                   <Text style={styles.locationTitleText}>{location.name}</Text>
                   {Object.values(location)[1] === "Closed" ? (
@@ -108,7 +106,7 @@ function HoursScreen({navigation}) {
                     </Text>
                   )}
                 </View>
-
+                {/* Display the open hours */}
                 {!Object.values(location)[1].from ? (
                   <View style={styles.locationHoursTextContainer}>
                     <Text>Open Hours</Text>
@@ -151,7 +149,6 @@ function HoursScreen({navigation}) {
 export default HoursScreen;
 
 const deviceWidth = Dimensions.get("window").width;
-const deviceHeight = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   rootContainer: {

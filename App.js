@@ -1,45 +1,47 @@
-import {StatusBar} from "expo-status-bar";
-import {NavigationContainer} from "@react-navigation/native";
-import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import "react-native-gesture-handler";
 import {
   createDrawerNavigator,
   DrawerToggleButton,
 } from "@react-navigation/drawer";
-import Home from "./src/screens/HomeScreen";
-import {GlobalStyles} from "./src/constants/styles";
-import BackButton from "./src/components/BackButton";
-import BlogContextProvider from "./src/store/context/blog-context";
-import {useEffect, useCallback} from "react";
-import {configureFcmNotifications} from "./src/util/fcmTasks";
+import {NavigationContainer} from "@react-navigation/native";
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import {decode, encode} from "base-64";
 import {useFonts} from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import {StyleSheet, SafeAreaView, Dimensions, Image} from "react-native";
-import BlogAndLatestEvents from "./src/screens/BlogAndLatestEvents";
-import LatestEventsContextProvider from "./src/store/context/latestEvents-context";
-import ArticleScreen from "./src/screens/ArticleScreen";
-import LocationsScreen from "./src/screens/LocationsScreen";
-import MapScreen from "./src/screens/MapScreen";
+import {StatusBar} from "expo-status-bar";
+import {useCallback, useEffect} from "react";
+import {SafeAreaView, StyleSheet} from "react-native";
+import "react-native-gesture-handler";
 import * as Sentry from "sentry-expo";
-import {decode, encode} from "base-64";
-import LibCalContextProvider from "./src/store/context/libCal-context";
-import HoursScreen from "./src/screens/HoursScreen";
-import InstagramContextProvider from "./src/store/context/instagram-context";
-import ReserveScreen from "./src/screens/ReserveScreen";
-import ReserveHoursContextProvider from "./src/store/context/reserveHours-context";
+import BackButton from "./src/components/BackButton";
+import {GlobalStyles} from "./src/constants/styles";
+import ArticleScreen from "./src/screens/ArticleScreen";
+import BlogAndLatestEvents from "./src/screens/BlogAndLatestEvents";
 import BookingScreen from "./src/screens/BookingScreen";
+import Home from "./src/screens/HomeScreen";
+import HoursScreen from "./src/screens/HoursScreen";
+import MapScreen from "./src/screens/MapScreen";
+import ReserveScreen from "./src/screens/ReserveScreen";
+import BlogContextProvider from "./src/store/context/blog-context";
+import InstagramContextProvider from "./src/store/context/instagram-context";
+import LatestEventsContextProvider from "./src/store/context/latestEvents-context";
+import LibCalContextProvider from "./src/store/context/libCal-context";
+import ReserveHoursContextProvider from "./src/store/context/reserveHours-context";
+import {configureFcmNotifications} from "./src/util/fcmTasks";
 
+//The two following if statements removes the errors
+//Can't find variable: btoa &&  Can't find variable: atob
+//Sets the btoa variable to base64 format
 if (!global.btoa) {
   global.btoa = encode;
 }
-
+//Sets the atob variable to base64 format
 if (!global.atob) {
   global.atob = decode;
 }
 
 // Keep the splash screen visible while we fetch resources, This prevents SplashScreen from auto hiding while the fonts are loaded.
 SplashScreen.preventAutoHideAsync().catch((err) => console.log(err));
-
+//Initializes Sentry: Application Performance Monitoring and Error Tracking
 Sentry.init({
   dsn: "https://318ff9e98066266d1a30afbffb05b767@o4505909001191424.ingest.sentry.io/4505909010038784",
   enableInExpoDevelopment: true,
@@ -150,6 +152,7 @@ function DrawerNavigation({navigation}) {
 }
 
 export default function App() {
+  //Initialize push notifications sent through the Firebase Cloud Messaging Platform
   useEffect(() => {
     configureFcmNotifications();
   }, []);
@@ -192,14 +195,6 @@ export default function App() {
                         headerTitleAlign: "center",
                       })}
                     />
-                    {/* <Stack.Screen
-                name="Map"
-                component={MapScreen}
-                options={({navigation}) => ({
-                  headerLeft: () => <BackButton navigation={navigation} />,
-                  headerTitleAlign: "center",
-                })}
-              /> */}
                   </Stack.Navigator>
                 </NavigationContainer>
               </BlogContextProvider>

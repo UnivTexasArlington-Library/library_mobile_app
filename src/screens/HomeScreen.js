@@ -1,36 +1,34 @@
+import * as Notifications from "expo-notifications";
+import LottieView from "lottie-react-native";
+import {useContext, useEffect} from "react";
 import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Image,
   Dimensions,
+  Image,
+  ScrollView,
+  StyleSheet,
   Text,
+  View,
 } from "react-native";
 import HeaderImage from "../components/HeaderImage";
+import InstagramReelsSlideshow from "../components/InstagramReelsSlideshow";
 import Options from "../components/Options";
-import {useContext, useEffect, useState, useRef} from "react";
+import Resources from "../components/Resources";
+import SocialMediaLinks from "../components/SocialMediaLinks";
+import {GlobalStyles} from "../constants/styles";
 import {BlogContext} from "../store/context/blog-context";
+import {InstagramContext} from "../store/context/instagram-context";
+import {LatestEventsContext} from "../store/context/latestEvents-context";
+import {LibCalContext} from "../store/context/libCal-context";
+import {configureFcmInAppMessaging} from "../util/fcmTasks";
 import {
   fetchArticleData,
   fetchInstagramReels,
   fetchTodaysLibraryHours,
 } from "../util/http";
-import * as Notifications from "expo-notifications";
 import {
   configurePushNotifications,
   localNotifications,
 } from "../util/notificationTasks";
-import {configureFcmInAppMessaging} from "../util/fcmTasks";
-import {LatestEventsContext} from "../store/context/latestEvents-context";
-import LottieView from "lottie-react-native";
-import {GlobalStyles} from "../constants/styles";
-import {LibCalContext} from "../store/context/libCal-context";
-import {Video, ResizeMode} from "expo-av";
-import OutlinedButton from "../components/OutlinedButton";
-import InstagramReelsSlideshow from "../components/InstagramReelsSlideshow";
-import {InstagramContext} from "../store/context/instagram-context";
-import SocialMediaLinks from "../components/SocialMediaLinks";
-import Resources from "../components/Resources";
 
 // export async function requestPermissionsAsync() {
 //   return await Notifications.requestPermissionsAsync({
@@ -44,12 +42,17 @@ import Resources from "../components/Resources";
 // }
 
 function Home({navigation}) {
+  //stores blogs in Context
   const blogContext = useContext(BlogContext);
+  //stores news articles in Context
   const latestEventsContext = useContext(LatestEventsContext);
+  //stores library hours in Context
   const libCalContext = useContext(LibCalContext);
+  //stores instagram reels in Context
   const instagramContext = useContext(InstagramContext);
 
   useEffect(() => {
+    //fetching blogs and news articles from Drupal Headless CMS
     async function getArticleData() {
       const blogs = await fetchArticleData("blogs");
       const latestEvents = await fetchArticleData("latestEvents");
@@ -60,6 +63,7 @@ function Home({navigation}) {
   }, []);
 
   useEffect(() => {
+    //fetching library hours from libcal api
     async function TodaysLibraryHours() {
       const todaysLibHours = await fetchTodaysLibraryHours();
       libCalContext.setInitialLibHours(todaysLibHours);
@@ -68,6 +72,7 @@ function Home({navigation}) {
   }, []);
 
   useEffect(() => {
+    //fetching Instagram reels from Instagram Graph API
     async function InstagramReels() {
       const instagramReels = await fetchInstagramReels();
       instagramContext.setInitialInstagramReels(instagramReels);
@@ -77,14 +82,18 @@ function Home({navigation}) {
   }, []);
 
   useEffect(() => {
+    //Initialize expo push notifications needed for standalone android application
     configurePushNotifications();
   }, []);
 
   useEffect(() => {
+    //Initialize Firebase In-App Messaging
     configureFcmInAppMessaging();
   }, []);
 
   useEffect(() => {
+    //Initialize local notifications (prompts notification when user performs action,
+    //such as clicking a notification button)
     localNotifications();
   }, []);
   // Handles the behavior when notifications are received when your app is foregrounded. Sets the handler that will cause the notification to show the alert
@@ -99,6 +108,8 @@ function Home({navigation}) {
   });
 
   return (
+    //Once blogs, news articles, library hours, and instagram reels are loaded display the home screen
+    //otherwise display the loading bar
     <>
       {blogContext.blogs.length > 0 &&
       latestEventsContext.latestEvents.length > 0 &&

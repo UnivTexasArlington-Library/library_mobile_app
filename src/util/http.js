@@ -1,11 +1,12 @@
 import axios from "axios";
+import * as SecureStore from "expo-secure-store";
+import {locationIDs} from "../constants/locationIDs";
 import {
   URL,
-  latestEventsURL,
-  URL_TEST,
   blogURL,
   instagramAccessToken,
   instagramID,
+  latestEventsURL,
 } from "../constants/urls";
 import {
   convertDate,
@@ -16,10 +17,6 @@ import {
   extractParagraphandImageValues,
   getBlogFeaturedImageUrl,
 } from "./blog_latestEvents_dataFormatter";
-import * as SecureStore from "expo-secure-store";
-import {locationIDs} from "../constants/locationIDs";
-import {useContext} from "react";
-import {LibCalContext} from "../store/context/libCal-context";
 
 export async function fetchArticleData(articleType, newURL) {
   let blogOrLatestEventsUrl;

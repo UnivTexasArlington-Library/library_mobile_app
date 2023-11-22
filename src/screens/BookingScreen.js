@@ -17,15 +17,10 @@ import FormButton from "../components/FormButton";
 import {postBooking} from "../util/http";
 
 function BookingScreen({route, navigation}) {
-  const {
-    locationName,
-    fromDate,
-    category,
-    categoryName,
-    toDate,
-    item,
-    itemName,
-  } = route.params;
+  //destruct route parameters into distinct variables to be used in booking form
+  const {locationName, fromDate, categoryName, toDate, item, itemName} =
+    route.params;
+  //initialize React Hook Form with the following variables set to an empty string: firstName, lastName, email
   const {
     control,
     handleSubmit,
@@ -41,6 +36,7 @@ function BookingScreen({route, navigation}) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [email, setEmail] = useState(null);
   const [error, setError] = useState(null);
+  //Once form is submitted send POST request to libcal api to reserve study space
   const onSubmit = async (data) => {
     const post = await postBooking(
       fromDate,
@@ -51,6 +47,7 @@ function BookingScreen({route, navigation}) {
       data.email
     );
     setEmail(data.email);
+    //if POST request was not successful respond with error message
     if ("success" !== post) {
       setError(post);
     }
@@ -60,7 +57,7 @@ function BookingScreen({route, navigation}) {
   function openDrawerHandler() {
     navigation.navigate("Reserve");
   }
-
+  //when booking screen is out of focus reset email/error to null and modal/booking form to false
   useFocusEffect(
     useCallback(() => {
       setEmail(null);
@@ -99,6 +96,8 @@ function BookingScreen({route, navigation}) {
           </View>
         </View>
       </View>
+      {/* if the booking form is true display terms and conditions otherwise display
+      firstName, lastName, and email input fields */}
       {!isBookingFormDisplayed ? (
         <View style={styles.conditionsContainer}>
           <ScrollView>
@@ -210,6 +209,8 @@ function BookingScreen({route, navigation}) {
                   alignItems: "center",
                 }}
               >
+                {/* if the study space was succesfully reserved display a modal letting the user know the booking was Confirmed
+                otherwise display a message stating the booking was denied.  */}
                 {error === null ? (
                   <>
                     <Text style={styles.modalTitleText}>Booking Confirmed</Text>
@@ -297,6 +298,7 @@ function BookingScreen({route, navigation}) {
               </View>
             </Modal>
           </View>
+          {/* if any of the fields in the form were filled incorrectly display an error message under that specific input field */}
           {errors.firstName && (
             <Text style={styles.errorMessage}>First Name is required.</Text>
           )}
@@ -313,7 +315,6 @@ function BookingScreen({route, navigation}) {
           )}
         </View>
       )}
-
       <View style={styles.continueButtonContainer}>
         {!isBookingFormDisplayed ? (
           <FormButton
