@@ -1,18 +1,20 @@
-import {useCallback, useContext, useState, memo} from "react";
-import {View, useWindowDimensions, Dimensions} from "react-native";
+import {Foundation, MaterialIcons} from "@expo/vector-icons";
 import {FlashList} from "@shopify/flash-list";
-import {BlogContext} from "../store/context/blog-context";
-import ArticlePreview from "../components/ArticlePreview";
-import {ScrollView} from "react-native";
-import {StyleSheet} from "react-native";
-import {GlobalStyles} from "../constants/styles";
-import {Pressable} from "react-native";
-import {MaterialIcons, Foundation} from "@expo/vector-icons";
-import {fetchArticleData} from "../util/http";
 import LottieView from "lottie-react-native";
+import {memo, useCallback, useContext, useState} from "react";
+import {
+  Dimensions,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+import ArticlePreview from "../components/ArticlePreview";
+import {GlobalStyles} from "../constants/styles";
+import {BlogContext} from "../store/context/blog-context";
+import {fetchArticleData} from "../util/http";
 
 function BlogScreen({navigation}) {
-  const {width, height} = useWindowDimensions();
   const blogContext = useContext(BlogContext);
   const blogPosts = blogContext.blogs;
   const [isLoading, setIsLoading] = useState(false);

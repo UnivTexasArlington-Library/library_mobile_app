@@ -1,17 +1,20 @@
-import {memo, useCallback, useContext, useState} from "react";
-import {View, useWindowDimensions, StyleSheet, Dimensions} from "react-native";
+import {Foundation, MaterialIcons} from "@expo/vector-icons";
 import {FlashList} from "@shopify/flash-list";
-import ArticlePreview from "../components/ArticlePreview";
-import {ScrollView} from "react-native";
-import {LatestEventsContext} from "../store/context/latestEvents-context";
-import {MaterialIcons, Foundation} from "@expo/vector-icons";
-import {GlobalStyles} from "../constants/styles";
-import {Pressable} from "react-native";
-import {fetchArticleData} from "../util/http";
 import LottieView from "lottie-react-native";
+import {memo, useCallback, useContext, useState} from "react";
+import {
+  Dimensions,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+import ArticlePreview from "../components/ArticlePreview";
+import {GlobalStyles} from "../constants/styles";
+import {LatestEventsContext} from "../store/context/latestEvents-context";
+import {fetchArticleData} from "../util/http";
 
 function LatestEventsScreen({navigation}) {
-  const {width, height} = useWindowDimensions();
   const latestEventsContext = useContext(LatestEventsContext);
   const latestEventsPosts = latestEventsContext.latestEvents;
   const [isLoading, setIsLoading] = useState(false);

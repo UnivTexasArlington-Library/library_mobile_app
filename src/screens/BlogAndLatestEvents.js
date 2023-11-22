@@ -8,6 +8,7 @@ import {Text} from "react-native";
 const BottomTab = createBottomTabNavigator();
 
 //News And Events Screen contain "latest events" and "blog" bottom tabs
+//When routed to the BlogAndLatestEvents screen the "Latest Events" tab will be set as default
 export default function BlogAndLatestEvents() {
   return (
     <BottomTab.Navigator

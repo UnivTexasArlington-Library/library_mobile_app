@@ -1,33 +1,30 @@
-import {useEffect, useState} from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  Image,
-  Pressable,
-  ScrollView,
-  Platform,
-  Alert,
-  Button,
-  TouchableOpacity,
-} from "react-native";
-import MapView, {
-  Marker,
-  Callout,
-  Polygon,
-  PROVIDER_GOOGLE,
-} from "react-native-maps";
-import {GlobalStyles} from "../constants/styles";
-import {markers, polygons} from "../constants/mapData";
-import Carousel from "react-native-reanimated-carousel";
 import * as Sentry from "@sentry/react-native";
 import * as Location from "expo-location";
-import {useContext} from "react";
-import {LibCalContext} from "../store/context/libCal-context";
-import TodaysLibraryHours from "../components/TodaysLibraryHours";
+import {useEffect, useState} from "react";
+import {
+  Alert,
+  Dimensions,
+  Image,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import MapView, {
+  Callout,
+  Marker,
+  PROVIDER_GOOGLE,
+  Polygon,
+} from "react-native-maps";
 import {createOpenLink} from "react-native-open-maps";
+import Carousel from "react-native-reanimated-carousel";
 import OutlinedButton from "../components/OutlinedButton";
+import TodaysLibraryHours from "../components/TodaysLibraryHours";
+import {markers, polygons} from "../constants/mapData";
+import {GlobalStyles} from "../constants/styles";
 
 const deviceWidth = Dimensions.get("window").width;
 const deviceHeight = Dimensions.get("window").height;
@@ -38,6 +35,11 @@ function MapScreen({navigation}) {
     const [polygonsData, setPolygonsData] = useState([]);
     const [status] = Location.useForegroundPermissions();
 
+    //if location permissions are not enabled then display a modal
+    //giving the user an option to enable location permissions
+    //if the user selects cancel close the modal
+    //if the user selects OK then take the user to application permission settings and give them the opportunity
+    //to enable permissions
     const CheckIfLocationEnabled = async () => {
       if (!status.granted) {
         Alert.alert(
@@ -62,7 +64,7 @@ function MapScreen({navigation}) {
         );
       }
     };
-
+    //set initial location markers and building outlines
     useEffect(() => {
       setMarkersData(markers);
       setPolygonsData(polygons);
@@ -73,7 +75,8 @@ function MapScreen({navigation}) {
       latitudeDelta: 0.004,
       longitudeDelta: 0.004,
     };
-
+    //each item in the carousel slider displays the locations name, a picture of the location,
+    //open hours, a description of the location, and a get directions button
     const renderCarouselItem = ({item, index}) => (
       <View style={styles.cardContainer}>
         <ScrollView>
@@ -129,7 +132,8 @@ function MapScreen({navigation}) {
         </ScrollView>
       </View>
     );
-
+    //when the user swipes to the left or right change the longitude and latitude coordinates to the
+    //coordinates of the new location
     onCarouselItemChange = (index) => {
       this._map.animateToRegion({
         latitude: markersData[index].props.coordinate.latitude,
@@ -139,11 +143,11 @@ function MapScreen({navigation}) {
       });
       markers[index].showCallout();
     };
-
+    //when the user clicks on a location marker automatically scroll the carousel that location item
     onMarkerPressed = (location, index) => {
       this.carousel.scrollTo({index: index});
     };
-
+    //when the user clicks on the location in the carousel slider automatically navigate the map to that locations marker
     selectRegion = (index) => {
       this._map.animateToRegion({
         latitude: markersData[index].props.coordinate.latitude,

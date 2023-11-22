@@ -6,7 +6,8 @@ import {GlobalStyles} from "../constants/styles";
 
 function ArticleScreen({route}) {
   const systemFonts = [...defaultSystemFonts, "open-sans"];
-  const {width, height} = useWindowDimensions();
+  const {width} = useWindowDimensions();
+  //HTML block that will used as the body text for article
   const source = {
     html: `<div style="font-size: 16px; fontFamily: 'open-sans'">${route.params.bodyHTML}</div>`,
   };
@@ -39,6 +40,7 @@ function ArticleScreen({route}) {
           </View>
           <Image source={route.params.imageUrl} style={styles.image} />
           <Text style={styles.teaser}>{route.params.articleTeaser}</Text>
+          {/* Render HTML into code readable by React Native */}
           <RenderHTML
             contentWidth={width}
             source={source}

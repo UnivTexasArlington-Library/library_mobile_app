@@ -61,16 +61,22 @@ function ReserveScreen({navigation}) {
   const [tableDataTwo, setTableDataTwo] = useState([]);
   const locationRef = useRef(null);
   const categoryRef = useRef(null);
+  //change date to the selected calendar date
   const onDateChanged = (date, source) => {
     console.log("TimelineCalendarScreen onDateChanged: ", date, source);
     setCurrentDate(date);
   };
+  //change month to the selected calendar month
   const onMonthChange = (month, updateSource) => {
     console.log("TimelineCalendarScreen onMonthChange: ", month, updateSource);
   };
+  //toggles the reserve study room time submission modal
   const toggleModal = (value, index) => {
     console.log("index", index);
+    //sets the index value used to set the filtered options provided on the
+    //reserve study room time submission modal
     setIndexValue(index);
+    //if the modal is not displayed set the values needed to reserve a study space.
     if (isModalVisible === false) {
       const name = spaces.filter((item) => spacesValue === item.value);
       const category = categories.filter(
@@ -82,11 +88,13 @@ function ReserveScreen({navigation}) {
       setCategoryName(category[0].label);
       setLocationName(location[0].label);
     }
+    //if the modal is displayed set the availability value to false
     if (isModalVisible === true) {
       setAvailabilityValue(null);
     }
     setModalVisible(!isModalVisible);
   };
+  //close the dropdown picker
   const onOpen = useCallback((value) => {
     if (value === "location") {
       setOpenCategory(false);
@@ -99,7 +107,7 @@ function ReserveScreen({navigation}) {
       setOpenCategory(false);
     }
   });
-
+  //when the screen is no longer in displayed reset the following values to null
   useFocusEffect(
     useCallback(() => {
       setLocationValue(null);
@@ -109,16 +117,18 @@ function ReserveScreen({navigation}) {
       setTableDataTwo([]);
     }, [])
   );
-
+  //when the from date changes update the availability options
   useEffect(() => {
     const filteredAvailabiltyOptions = availabiltyAndBookingsList.slice(
       indexValue + 1
     );
     setFilteredOptions(filteredAvailabiltyOptions);
   }, [fromDate]);
-
+  //when the filtered options changes update the availability options
   useEffect(() => {
     const availabiltyOptionsList = [];
+    //if the filtered option is not booked update the available options list with that option
+    //and add the label and value properties
     for (let x = 0; x < filteredOptions.length; x++) {
       if (filteredOptions[x][0] !== "Booked") {
         availabiltyOptionsList.push({
@@ -138,20 +148,25 @@ function ReserveScreen({navigation}) {
       return date;
     }
     const specificDate = new Date(fromDate);
+    //add 30 minutes to the date time
     const result = add_minutes(specificDate, 30);
+    //if the available options list is empty then push the first option with
+    //the label and value property
     if (availabiltyOptionsList.length < 1) {
       availabiltyOptionsList.push({
+        //reformat the date
         label: format(new Date(result), "h':'mm a cccc',' MMMM d',' yyyy"),
         value: result,
       });
     }
+    //update the options list
     setAvailableOptions(availabiltyOptionsList);
   }, [filteredOptions]);
-
+  //recieve the space items for the dropdown menu
   function getSpacesItems() {
     setSpaces(filterSpacesDropdown(categoriesValue, spaces));
   }
-
+  //button to reserve the time slot
   function elementButton(value, index) {
     return (
       <TouchableOpacity onPress={() => toggleModal(value, index)}>
@@ -161,7 +176,7 @@ function ReserveScreen({navigation}) {
       </TouchableOpacity>
     );
   }
-
+  //navigate to the booking screen after clicking the submit button
   function openDrawerHandler() {
     setLocationValue(null);
     setCategoriesValue(null);
